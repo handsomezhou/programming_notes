@@ -9,4 +9,11 @@
 #define AG_FAILED		(-1)
 
 
+typedef struct alphabet_game{
+
+}alphabet_game_t;
+
+extern int init_alphabet_game(alphabet_game_t **alphabet_game);
+extern void exit_alphabet_game(alphabet_game_t *alphabet_game);
+
 #endif	/*ALPHABET_GAME_H*/
