@@ -1,50 +1,45 @@
 Alphabet game instructions
-==================================================
+=========================================================
 The main interface:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-|							|
-|							|
-|							|
-|							|
-|			Start Game			|
-|							|
-|							|
-|			Help				|
-|							|
-|							|
-|			Exit Game			|
-|							|
-|							|
-|							|
-|							|
+|                      "Game name"                      |
+|-------------------------------------------------------|
+|                                                       |
+|                                                       |
+|                       Start Game                      |
+|                                                       |
+|                                                       |
+|                       Help                            |
+|                                                       |
+|                                                       |
+|                       Exit Game                       |
+|                                                       |
+|                                                       |
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 (1)The interface of "Start Game":
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-|     Level	n	    |	 	time n s	|
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-|							|
-|			F				|
-|							|
-|	B				D		|
-|							|
-|							|
-|							|
-|							|
-|							|
-|	A				C		|
-|							|
-|							|
-|							|
-|							|
+|		     "Game name"                        |
+|-------------------------------------------------------|
+|       Level   n         |      time n (s)             |
+|-------------------------------------------------------|
+|                         F                             |
+|                                                       |
+|        B                                  D           |
+|                                                       |
+|                                                       |
+|                                                       |
+|                                                       |
+|        A                                  C           |
+|                                                       |
+|                                                       |
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ps:
-	level	time(s)	Alphabet_num
-	  1	 20 	     5
-	  2	 30	     8
-	  3 	 40	     13
-	  4	 60	     26
+level     time(s)     Alphabet_num
+  1        20             5
+  2        30             8
+  3        40             13
+  4        60             26
 You will start the game when you click the button of "Start".
 You will win current level in the game when you click all Alphabet follow alphabetical order.
 You will win the game When you finished all level of the game,otherwise you will lose the game.

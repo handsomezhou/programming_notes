@@ -5,6 +5,8 @@
 #ifndef ALPHABET_GAME_H
 #define ALPHABET_GAME_H
 
+#define GAME_NAME		"Alphabet Game"
+
 #define AG_SUCCESS		0
 #define AG_FAILED		(-1)
 
