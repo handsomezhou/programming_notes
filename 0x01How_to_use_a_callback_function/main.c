@@ -4,6 +4,10 @@
 
 #include <stdio.h>
 #include "alphabet_game.h"
+#include "input_alphabet_game.h"
+#include "handle_alphabet_game.h"
+#include "output_alphabet_game.h"
+
 
 int main(int argc,char *argv[])
 {
@@ -15,7 +19,9 @@ int main(int argc,char *argv[])
 		if(AG_FAILED==ret){
 			break;
 		}
-
+		input_alphabet_game(alphabet_game);
+		handle_alphabet_game(alphabet_game);
+		paint_alphabet_game(alphabet_game);
 		ret=AG_SUCCESS;
 	}while(0);
 	

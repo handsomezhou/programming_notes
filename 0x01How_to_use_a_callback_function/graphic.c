@@ -3,6 +3,7 @@
   */
 #include <assert.h>
 #include "data_type.h"
+#include "graphic.h"
 
 T_BOOL coordinate_in_rect(const T_RECT *rect,const T_COORDINATE *coordinate)
 {

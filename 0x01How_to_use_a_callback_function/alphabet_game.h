@@ -5,11 +5,23 @@
 #ifndef ALPHABET_GAME_H
 #define ALPHABET_GAME_H
 
+#include <stdio.h>
+
 #define GAME_NAME		"Alphabet Game"
 
 #define AG_SUCCESS		0
 #define AG_FAILED		(-1)
 
+typedef enum{
+	ALPHABET_GAME_MAIN_INTERFACE,
+	ALPHABET_GAME_CHILD_INTERFACE,
+}alphabet_game_interface_t;
+
+typedef enum{
+	ALPHABET_GAME_CHILD_INTERFACE_START,
+	ALPHABET_GAME_CHILD_INTERFACE_HELP,
+	ALPHABET_GAME_CHILD_INTERFACE_EXIT,
+}alphabet_game_child_interface_t;
 
 typedef struct alphabet_game{
 

@@ -12,12 +12,21 @@ typedef char T_TEXT;
 
 #define TRUE	1
 #define FALSE	0
+
 typedef int T_BOOL;
+
+#ifndef bool
+#define bool int
+#endif
+
+
 
 typedef struct Coordinate{
 	T_S16 y;
 	T_S16 x;
 }T_COORDINATE,*T_pCOORDINATE;
+
+typedef T_COORDINATE coordinate_t;
 
 typedef struct Rect{
 	T_S16 top;
@@ -25,6 +34,8 @@ typedef struct Rect{
 	T_S16 height;
 	T_S16 width;
 }T_RECT,*T_pRECT;
+
+typedef T_RECT rect_t;
 
 typedef struct Button{
 	int id;

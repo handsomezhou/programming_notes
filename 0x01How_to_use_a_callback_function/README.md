@@ -19,7 +19,7 @@ The main interface:
 (1)The interface of "Start Game":
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-|		     "Game name"                        |
+|		               "Game name"                      |
 |-------------------------------------------------------|
 |       Level   n         |      time n (s)             |
 |-------------------------------------------------------|
@@ -44,6 +44,21 @@ You will start the game when you click the button of "Start".
 You will win current level in the game when you click all Alphabet follow alphabetical order.
 You will win the game When you finished all level of the game,otherwise you will lose the game.
 (2)The interface of "Help"
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|             "Game name Help instructions"             |
+|-------------------------------------------------------|
+|                   "help contents"                     |
+|                   "help contents"                     |
+|                   "help contents"                     |
+|                   "help contents"                     |
+|                   "help contents"                     |
+|                   "help contents"                     |
+|                   "help contents"                     |
+|                   "help contents"                     |
+|                   "help contents"                     |
+|                                                Return |
+|                                                       |
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 You will view the help of the game when you click the button of "Help"
 (3)The interface of "Exit Game"
 You will exit the game when you click the button of "Exit Game".

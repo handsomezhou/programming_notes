@@ -5,6 +5,8 @@
 #ifndef INPUT_ALPHABET_GAME_H
 #define	INPUT_ALPHABET_GAME_H
 
+#include "alphabet_game.h"
+
 extern int input_alphabet_game(alphabet_game_t *alphabet_game);
   
 #endif	/*INPUT_ALPHABET_GAME_H*/
