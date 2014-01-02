@@ -27,7 +27,7 @@ typedef struct ctrl_tool_callback{
 	int (* pf_event_pen_up)(const m_evt_code_t *p_m_evt_code, int sel_index);
 	int (* pf_event_pen_down)(const m_evt_code_t *p_m_evt_code, int sel_index);
 	int (* pf_event_select)(const m_evt_code_t *p_m_evt_code, int sel_index);
-	int (* pf_event_enter_select)(const m_evt_code_t *p_m_evt_code, int sel_index);
+	int (* pf_event_enter)(const m_evt_code_t *p_m_evt_code, int sel_index);
 	int (* pf_event_esc)(const m_evt_code_t *p_m_evt_code, int sel_index);
 }ctrl_tool_callback_t;
 
