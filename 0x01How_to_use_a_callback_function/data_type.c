@@ -4,20 +4,20 @@
 #include <assert.h>
 #include "data_type.h"
 
-T_COORDINATE *cpy_coordinate(T_COORDINATE *dst, const T_COORDINATE *src)
+coordinate_t *cpy_coordinate(coordinate_t *dst, const coordinate_t *src)
 {
 	assert(NULL!=dst&&NULL!=src);
-	T_COORDINATE *addr=dst;
+	coordinate_t *addr=dst;
 	dst->y=src->y;
 	dst->x=src->x;
 		  
 	return addr;
 }
 
-T_RECT *cpy_rect(T_RECT *dst, const T_RECT *src)
+rect_t *cpy_rect(rect_t *dst, const rect_t *src)
 {
 	assert(NULL!=dst&&NULL!=src);
-	T_RECT *addr=dst;
+	rect_t *addr=dst;
 		  
 	dst->top=src->top;
 	dst->left=src->left;

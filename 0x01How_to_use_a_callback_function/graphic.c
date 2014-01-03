@@ -5,7 +5,7 @@
 #include "data_type.h"
 #include "graphic.h"
 
-T_BOOL coordinate_in_rect(const T_RECT *rect,const T_COORDINATE *coordinate)
+bool coordinate_in_rect(const rect_t *rect,const coordinate_t *coordinate)
 {
 	assert(NULL!=rect&&NULL!=coordinate);
 
