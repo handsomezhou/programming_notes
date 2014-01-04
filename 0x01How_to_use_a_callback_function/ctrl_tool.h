@@ -19,9 +19,10 @@ extern "C" {
 typedef void* p_ctrl_tool_t;
 
 typedef struct ctrl_tool_res{
-	rect_t	rect;
-	int		icon_normal;//set background color
-	int 	icon_select;//set background color
+	rect_t rect;	//show location
+	int icon_normal;//set unselected background color 
+	int icon_select;//set select  background color
+	char *pdata;	//display data
 }ctrl_tool_res_t;
 
 typedef struct ctrl_tool_callback{
