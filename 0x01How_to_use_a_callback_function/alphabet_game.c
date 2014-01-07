@@ -2,6 +2,7 @@
   *  Copyright (C) 2013-12-09  Handsome Zhou
   */
 #include <stdlib.h>
+#include <unistd.h>
 #include "data_type.h"
 #include "message_event.h"
 #include "ctrl_tool.h"
@@ -9,9 +10,13 @@
 
 static int init_screen(screen_t *screen);
 static void exit_screen(screen_t *screen);
+static int init_status(status_t *status);
+static void exit_status(status_t *status);
+
+static int set_delay_time(unsigned int *time, unsigned int delay_time);
 
 
-/*alphabet game main interface event*/
+/*alphabet game main status event*/
 static int alphabet_game_paint(rect_t *p_rect,int index, bool sel_flag);
 static int alphabet_game_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index);
 static int alphabet_game_pen_down(const m_evt_code_t *p_m_evt_code, int sel_index);
@@ -34,7 +39,7 @@ static ctrl_tool_res_t alphabet_game_res[ALPHABET_GAME_WIDGET_NUM]={
 			},
 };
 #endif
-/*alphabet game child interface event:game start,game help,game exit*/
+/*alphabet game child status event:game start,game help,game exit*/
 static int alphabet_game_start_paint(rect_t *p_rect,int index, bool sel_flag);
 static int alphabet_game_start_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index);
 static int alphabet_game_start_pen_down(const m_evt_code_t *p_m_evt_code, int sel_index);
@@ -105,6 +110,16 @@ int init_alphabet_game(alphabet_game_t **alphabet_game)
 			break;
 		}
 
+		ret=init_status(&(*ag)->status);
+		if(AG_FAILED==ret){
+			break;
+		}
+
+		ret=set_delay_time(&(*ag)->delay_time,DELAY_TIME);
+		if(AG_FAILED==ret){
+			break;
+		}
+		
 		return AG_SUCCESS;
 	}while(0);
 
@@ -120,12 +135,18 @@ void exit_alphabet_game(alphabet_game_t *alphabet_game)
 	}
 	exit_screen(&ag->scr);
 
+	exit_status(NULL);
+
 	free(ag);
 	ag=NULL;
 	
 	return ;
 }
 
+inline void sleep_delay_time(const unsigned int *time)
+{
+	usleep(((NULL==time)?(DELAY_TIME_MIN):(*time)));	
+}
 
 static int init_screen(screen_t *screen)
 {
@@ -137,10 +158,48 @@ static int init_screen(screen_t *screen)
 static void exit_screen(screen_t *screen)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	screen_t *scr=screen;
+	if(NULL==scr){
+		return;
+	}
 	
 	return ;
 }
 
+static int init_status(status_t *status)
+{
+	status_t *stts=status;
+	if(NULL==stts){
+		return AG_FAILED;
+	}
+	
+	*stts=MAIN_STATUS;
+	
+	return AG_SUCCESS;
+}
+
+static void exit_status(status_t *status)
+{	
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	status_t *stts=status;
+	if(NULL==stts){
+		return;
+	}
+	
+	return ;
+}
+
+static int set_delay_time(unsigned int *time, unsigned int delay_time)
+{
+	unsigned int *tm=time;
+	if(NULL==tm){
+		return AG_FAILED;
+	}
+
+	*tm=( ((delay_time>=DELAY_TIME_MIN)&&(delay_time<=DELAY_TIME_MAX))?(delay_time):(DELAY_TIME_MIN) );
+	
+	return AG_SUCCESS;
+}
 
 static int alphabet_game_paint(rect_t *p_rect,int index, bool sel_flag)
 {

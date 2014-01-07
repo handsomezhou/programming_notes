@@ -15,30 +15,33 @@
 #define AG_SUCCESS		(0)
 #define AG_FAILED		(-1)
 
-/*==========alphabet game main interface event==========>*/
+#define DELAY_TIME_MAX	500000//us
+#define DELAY_TIME_MIN	 50000//us
+#define DELAY_TIME		250000//us
+
+
+
+
+
+
+/*==========alphabet game main status event==========>*/
 #define ALPHABET_GAME_WIDGET_NUM		(3)
 
 #define ALPHABET_GAME_START_X			1
 
-/*<==========alphabet game main interface event==========*/
+/*<==========alphabet game child status event==========*/
 #define ALPHABET_GAME_START_WIDGET_NUM	(26)
 #define ALPHABET_GAME_HELP_WIDGET_NUM	(1)
 
 typedef enum{
-	ALPHABET_GAME_MAIN_INTERFACE,
-	ALPHABET_GAME_CHILD_INTERFACE,
-}alphabet_game_interface_t;
-
-typedef enum{
-	ALPHABET_GAME_CHILD_INTERFACE_START,
-	ALPHABET_GAME_CHILD_INTERFACE_HELP,
-	ALPHABET_GAME_CHILD_INTERFACE_EXIT,
-}alphabet_game_child_interface_t;
+	MAIN_STATUS=0,		 	//Status that not enter the event of any button
+	CHILD_STATUS_START,		//Status that enter the event of start's button
+	CHILD_STATUS_HELP,		//Status that enter the event of help's button	
+	CHILD_STATUS_EXIT,	 	//Status that enter the event of exit's button
+}status_t;
 
 typedef struct screen{
 	WINDOW *win;
-	alphabet_game_interface_t alphabet_game_interface;
-	alphabet_game_child_interface_t alphabet_game_child_interface;
 	rect_t background;
 	rect_t foreground;
 	bool screen_change;//Determine whether to change the window size
@@ -46,9 +49,12 @@ typedef struct screen{
 
 typedef struct alphabet_game{
 	screen_t scr;
+	status_t status;
+	unsigned int delay_time;
 }alphabet_game_t;
 
 extern int init_alphabet_game(alphabet_game_t **alphabet_game);
 extern void exit_alphabet_game(alphabet_game_t *alphabet_game);
+extern inline void sleep_delay_time(const unsigned int *time);
 
 #endif	/*ALPHABET_GAME_H*/
