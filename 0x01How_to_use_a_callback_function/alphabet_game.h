@@ -53,8 +53,9 @@ typedef struct alphabet_game{
 	unsigned int delay_time;
 }alphabet_game_t;
 
-extern int init_alphabet_game(alphabet_game_t **alphabet_game);
+extern alphabet_game_t *init_alphabet_game(void);
 extern void exit_alphabet_game(alphabet_game_t *alphabet_game);
+extern int set_alphabet_game_status(status_t *stts, status_t cur_status);
 extern inline void sleep_delay_time(const unsigned int *time);
 
 #endif	/*ALPHABET_GAME_H*/

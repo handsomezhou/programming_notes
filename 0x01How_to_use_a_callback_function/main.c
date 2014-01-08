@@ -14,9 +14,10 @@ int main(int argc,char *argv[])
 	alphabet_game_t *alphabet_game=NULL;
 	int ret;
 	
-	ret=init_alphabet_game(&alphabet_game);
+	alphabet_game=init_alphabet_game();
 	do{
-		if(AG_FAILED==ret){
+		if(NULL==alphabet_game){
+			ret=AG_FAILED;
 			break;
 		}
 		while(CHILD_STATUS_EXIT!=alphabet_game->status){

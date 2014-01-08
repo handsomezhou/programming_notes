@@ -10,9 +10,6 @@
 
 static int init_screen(screen_t *screen);
 static void exit_screen(screen_t *screen);
-static int init_status(status_t *status);
-static void exit_status(status_t *status);
-
 static int set_delay_time(unsigned int *time, unsigned int delay_time);
 
 
@@ -88,42 +85,28 @@ static ctrl_tool_callback_t alphabet_game_exit_event={
 	alphabet_game_exit_esc,	
 };
 
-int init_alphabet_game(alphabet_game_t **alphabet_game)
+alphabet_game_t *init_alphabet_game(void)
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	alphabet_game_t *ag=NULL;
 	int ret=AG_FAILED;
-	alphabet_game_t **ag=alphabet_game;
 
-	if(NULL!=*ag){
-		exit_alphabet_game(*ag);
-		*ag=NULL;
+	ag=(alphabet_game_t *)malloc(sizeof(alphabet_game_t));
+
+	if(NULL==ag){
+		return NULL;
+	}
+	
+	ret=init_screen(&ag->scr);
+	if(AG_FAILED==ret){
+		//break;
 	}
 
-	*ag=(alphabet_game_t *)malloc(sizeof(alphabet_game_t));
-	do{
-		if(NULL==*ag){
-			break;
-		}
-		
-		ret=init_screen(&(*ag)->scr);
-		if(AG_FAILED==ret){
-			break;
-		}
+	set_alphabet_game_status(&ag->status,MAIN_STATUS);
+	
+	set_delay_time(&ag->delay_time,DELAY_TIME);
 
-		ret=init_status(&(*ag)->status);
-		if(AG_FAILED==ret){
-			break;
-		}
-
-		ret=set_delay_time(&(*ag)->delay_time,DELAY_TIME);
-		if(AG_FAILED==ret){
-			break;
-		}
-		
-		return AG_SUCCESS;
-	}while(0);
-
-	return AG_FAILED;
+	return ag;
 }
 
 void exit_alphabet_game(alphabet_game_t *alphabet_game)
@@ -135,12 +118,21 @@ void exit_alphabet_game(alphabet_game_t *alphabet_game)
 	}
 	exit_screen(&ag->scr);
 
-	exit_status(NULL);
-
 	free(ag);
 	ag=NULL;
 	
 	return ;
+}
+
+int set_alphabet_game_status(status_t *status, status_t cur_status)
+{
+	status_t *stts=status;
+	if(NULL==stts){
+		return AG_FAILED;
+	}
+	*stts=cur_status;
+
+	return AG_SUCCESS;
 }
 
 inline void sleep_delay_time(const unsigned int *time)
@@ -166,28 +158,6 @@ static void exit_screen(screen_t *screen)
 	return ;
 }
 
-static int init_status(status_t *status)
-{
-	status_t *stts=status;
-	if(NULL==stts){
-		return AG_FAILED;
-	}
-	
-	*stts=MAIN_STATUS;
-	
-	return AG_SUCCESS;
-}
-
-static void exit_status(status_t *status)
-{	
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	status_t *stts=status;
-	if(NULL==stts){
-		return;
-	}
-	
-	return ;
-}
 
 static int set_delay_time(unsigned int *time, unsigned int delay_time)
 {
