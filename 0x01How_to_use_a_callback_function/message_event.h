@@ -7,6 +7,7 @@
 
 #include <ncurses.h>
 
+#define NO_INPUT_DATA	(-1)
 #define KEY_NO_DATA		(-1)
 #define OTHER_NO_DATA	(-1)
 

@@ -12,7 +12,6 @@
 static int init_screen(screen_t *screen);
 static void exit_screen(screen_t *screen);
 
-static int init_m_evt_code(m_evt_code_t *m_evt_code);
 static int set_delay_time(unsigned int *time, unsigned int delay_time);
 
 
@@ -143,6 +142,21 @@ void sleep_delay_time(const unsigned int *time)
 	usleep(((NULL==time)?(DELAY_TIME_MIN):(*time)));	
 }
 
+int init_m_evt_code(m_evt_code_t *m_evt_code)
+{
+	m_evt_code_t *mec=m_evt_code;
+	if(NULL==mec){
+		return AG_FAILED;
+	}
+	
+	m_evt_code->m_evt_type=M_EVT_OTHER;
+	memset(&m_evt_code->m_evt_param.mouse_t.mouse,0,sizeof(m_evt_code->m_evt_param.mouse_t.mouse));
+	m_evt_code->m_evt_param.key_t.key=KEY_NO_DATA;
+	m_evt_code->m_evt_param.other_t.other=OTHER_NO_DATA;
+
+	return AG_SUCCESS;
+}
+
 static int init_screen(screen_t *screen)
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
@@ -191,22 +205,6 @@ static void exit_screen(screen_t *screen)
 	werase(scr->win);
 	endwin();
 	return ;
-}
-
-static int init_m_evt_code(m_evt_code_t *m_evt_code)
-{
-	m_evt_code_t *mec=m_evt_code;
-	if(NULL==mec){
-		return AG_FAILED;
-	}
-	
-	m_evt_code->m_evt_type=M_EVT_OTHER;
-	memset(&m_evt_code->m_evt_param.mouse_t.mouse,0,sizeof(m_evt_code->m_evt_param.mouse_t.mouse));
-	//m_evt_code->m_evt_param.mouse_t.mouse;
-	m_evt_code->m_evt_param.key_t.key=KEY_NO_DATA;
-	m_evt_code->m_evt_param.other_t.other=OTHER_NO_DATA;
-
-	return AG_SUCCESS;
 }
 
 static int set_delay_time(unsigned int *time, unsigned int delay_time)

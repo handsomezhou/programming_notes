@@ -69,5 +69,5 @@ extern alphabet_game_t *init_alphabet_game(void);
 extern void exit_alphabet_game(alphabet_game_t *alphabet_game);
 extern int set_alphabet_game_status(status_t *stts, status_t cur_status);
 extern void sleep_delay_time(const unsigned int *time);
-
+extern int init_m_evt_code(m_evt_code_t *m_evt_code);
 #endif	/*ALPHABET_GAME_H*/
