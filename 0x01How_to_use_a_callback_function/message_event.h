@@ -6,6 +6,10 @@
 #define MESSAGE_EVENT_H
 
 #include <ncurses.h>
+
+#define KEY_NO_DATA		(-1)
+#define OTHER_NO_DATA	(-1)
+
 typedef MEVENT 	m_evt_mouse_t;
 typedef int	   	m_evt_key_t;
 typedef int 	m_evt_other_t;

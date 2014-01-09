@@ -3,6 +3,7 @@
   */
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include "data_type.h"
 #include "message_event.h"
 #include "ctrl_tool.h"
@@ -10,6 +11,8 @@
 
 static int init_screen(screen_t *screen);
 static void exit_screen(screen_t *screen);
+
+static int init_m_evt_code(m_evt_code_t *m_evt_code);
 static int set_delay_time(unsigned int *time, unsigned int delay_time);
 
 
@@ -135,14 +138,44 @@ int set_alphabet_game_status(status_t *status, status_t cur_status)
 	return AG_SUCCESS;
 }
 
-inline void sleep_delay_time(const unsigned int *time)
+void sleep_delay_time(const unsigned int *time)
 {
 	usleep(((NULL==time)?(DELAY_TIME_MIN):(*time)));	
 }
 
 static int init_screen(screen_t *screen)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	screen_t *scr=screen;
+	if(NULL==scr){
+		return AG_FAILED;
+	}
+
+	//init ncurses
+	initscr();
+	noecho();
+	cbreak();
+	curs_set(FALSE);
+	clear();
+	if(has_colors()){
+		start_color();
+	}
+
+	scr->win=stdscr;
+
+	scr->background.top=ALPHABET_GAME_BACKGROUND_TOP;
+	scr->background.left=ALPHABET_GAME_BACKGROUND_LEFT;
+	scr->background.height=(int16_t)getmaxy(scr->win);
+	scr->background.width=(int16_t)getmaxx(scr->win);
+
+	scr->foreground.height=(int16_t)ALPHABET_GAME_FOREGROUND_HEIGHT;
+	scr->foreground.width=(int16_t)ALPHABET_GAME_FOREGROUND_WIDTH;
+	scr->foreground.top=(scr->background.height-scr->foreground.height)/2;	
+	scr->foreground.left=(scr->background.width-scr->foreground.width)/2;
+
+	wrefresh(scr->win);
+	keypad(scr->win,TRUE);
+	nodelay(stdscr,TRUE);
 	
 	return AG_SUCCESS;
 }
@@ -154,10 +187,27 @@ static void exit_screen(screen_t *screen)
 	if(NULL==scr){
 		return;
 	}
-	
+
+	werase(scr->win);
+	endwin();
 	return ;
 }
 
+static int init_m_evt_code(m_evt_code_t *m_evt_code)
+{
+	m_evt_code_t *mec=m_evt_code;
+	if(NULL==mec){
+		return AG_FAILED;
+	}
+	
+	m_evt_code->m_evt_type=M_EVT_OTHER;
+	memset(&m_evt_code->m_evt_param.mouse_t.mouse,0,sizeof(m_evt_code->m_evt_param.mouse_t.mouse));
+	//m_evt_code->m_evt_param.mouse_t.mouse;
+	m_evt_code->m_evt_param.key_t.key=KEY_NO_DATA;
+	m_evt_code->m_evt_param.other_t.other=OTHER_NO_DATA;
+
+	return AG_SUCCESS;
+}
 
 static int set_delay_time(unsigned int *time, unsigned int delay_time)
 {

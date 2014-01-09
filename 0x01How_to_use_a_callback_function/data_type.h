@@ -8,7 +8,10 @@
 #define TEXT_MAX_LEN	255//256-1
 
 typedef signed short T_S16;
+typedef T_S16 int16_t;
+
 typedef char T_TEXT;
+typedef T_TEXT text_t;
 
 #define TRUE	1
 #define FALSE	0
@@ -22,29 +25,28 @@ typedef int T_BOOL;
 
 
 typedef struct Coordinate{
-	T_S16 y;
-	T_S16 x;
+	int16_t y;
+	int16_t x;
 }T_COORDINATE,*T_pCOORDINATE;
-
 typedef T_COORDINATE coordinate_t;
 
 typedef struct Rect{
-	T_S16 top;
-	T_S16 left;
-	T_S16 height;
-	T_S16 width;
+	int16_t top;
+	int16_t left;
+	int16_t height;
+	int16_t width;
 }T_RECT,*T_pRECT;
-
 typedef T_RECT rect_t;
 
 typedef struct Button{
 	int id;
-	T_RECT option_rect;
-	T_TEXT	text[TEXT_MAX_LEN+1];
+	rect_t option_rect;
+	text_t text[TEXT_MAX_LEN+1];
 	struct Button *prev;
 	struct Button *next;
 }T_BUTTON,*T_pBUTTON;
+typedef T_BUTTON button_t;
 
-T_COORDINATE *cpy_coordinate(T_COORDINATE *dst, const T_COORDINATE *src);
-T_RECT *cpy_rect(T_RECT *dst, const T_RECT *src);
+coordinate_t *cpy_coordinate(coordinate_t *dst, const coordinate_t *src);
+rect_t *cpy_rect(rect_t *dst, const rect_t *src);
 #endif		/*DATA_TYPE_H*/

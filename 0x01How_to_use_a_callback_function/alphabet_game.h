@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <ncurses.h>
 #include "data_type.h"
+#include "message_event.h"
 
 
 #define GAME_NAME		"Alphabet Game"
@@ -23,6 +24,15 @@
 
 
 
+#define ALPHABET_GAME_BACKGROUND_TOP 	(0)
+#define ALPHABET_GAME_BACKGROUND_LEFT	(0)
+//#define ALPHABET_GAME_BACKGROUND_HEIGHT	(0)	//Get background's width and height according to window size
+//#define ALPHABET_GAME_BACKGROUND_WIDTH	(0)	
+
+//#define ALPHABET_GAME_FOREGROUND_TOP	(0)		//Get background's top and left according to background window size
+//#define ALPHABET_GAME_FOREGROUND_LEFT	(0)
+#define ALPHABET_GAME_FOREGROUND_HEIGHT	(15)
+#define ALPHABET_GAME_FOREGROUND_WIDTH	(60)
 
 /*==========alphabet game main status event==========>*/
 #define ALPHABET_GAME_WIDGET_NUM		(3)
@@ -40,8 +50,9 @@ typedef enum{
 	CHILD_STATUS_EXIT,	 	//Status that enter the event of exit's button
 }status_t;
 
+typedef WINDOW window_t;
 typedef struct screen{
-	WINDOW *win;
+	window_t *win;
 	rect_t background;
 	rect_t foreground;
 	bool screen_change;//Determine whether to change the window size
@@ -50,12 +61,13 @@ typedef struct screen{
 typedef struct alphabet_game{
 	screen_t scr;
 	status_t status;
+	m_evt_code_t m_evt_code;
 	unsigned int delay_time;
 }alphabet_game_t;
 
 extern alphabet_game_t *init_alphabet_game(void);
 extern void exit_alphabet_game(alphabet_game_t *alphabet_game);
 extern int set_alphabet_game_status(status_t *stts, status_t cur_status);
-extern inline void sleep_delay_time(const unsigned int *time);
+extern void sleep_delay_time(const unsigned int *time);
 
 #endif	/*ALPHABET_GAME_H*/
