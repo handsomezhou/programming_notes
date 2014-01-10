@@ -5,6 +5,12 @@
 #include "alphabet_game.h"
 #include "handle_alphabet_game.h"
 
+static int handle_main_status(alphabet_game_t *alphabet_game);
+static int handle_child_status_start(alphabet_game_t *alphabet_game);
+static int handle_child_status_help(alphabet_game_t *alphabet_game);
+static int handle_child_status_exit(alphabet_game_t *alphabet_game);
+static int handle_child_status_default(alphabet_game_t * alphabet_game);
+
 int handle_alphabet_game(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
@@ -14,22 +20,64 @@ int handle_alphabet_game(alphabet_game_t *alphabet_game)
 
 	switch(ag->status){
 	case MAIN_STATUS:
-		mvwprintw(stdscr,3+MAIN_STATUS,3+MAIN_STATUS,"%d-%s-%d",__LINE__,__FUNCTION__,MAIN_STATUS);
+		handle_main_status(ag);
 		break;
 	case CHILD_STATUS_START:
-		mvwprintw(stdscr,3+CHILD_STATUS_START,3+CHILD_STATUS_START,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_START);
+		handle_child_status_start(ag);
 		break;
 	case CHILD_STATUS_HELP:
-		mvwprintw(stdscr,3+CHILD_STATUS_HELP,3+CHILD_STATUS_HELP,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_HELP);
+		handle_child_status_help(ag);
 		break;
 	case CHILD_STATUS_EXIT:
-		mvwprintw(stdscr,3+CHILD_STATUS_EXIT,3+CHILD_STATUS_EXIT,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_EXIT);
+		handle_child_status_exit(ag);
 		break;
 	default:		
-		mvwprintw(stdscr,3+CHILD_STATUS_EXIT,3+CHILD_STATUS_EXIT,"%d-%s-default",__LINE__,__FUNCTION__);
+		handle_child_status_default(ag);
 		break;
 	}
 	
 	return AG_SUCCESS;	
 }
 
+
+static int handle_main_status(alphabet_game_t *alphabet_game)
+{
+	alphabet_game_t *ag=alphabet_game;
+	if(NULL==ag){
+		return AG_FAILED;
+	}
+	
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	mvwprintw(ag->scr.win,3,10,"I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	ctrl_tool_handle(NULL,NULL);
+	
+	return AG_SUCCESS;
+}
+
+static int handle_child_status_start(alphabet_game_t *alphabet_game)
+{
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	
+	return AG_SUCCESS;
+}
+
+static int handle_child_status_help(alphabet_game_t *alphabet_game)
+{
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	
+	return AG_SUCCESS;
+}
+
+static int handle_child_status_exit(alphabet_game_t *alphabet_game)
+{
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	
+	return AG_SUCCESS;
+}
+
+static int handle_child_status_default(alphabet_game_t * alphabet_game)
+{
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	
+	return AG_SUCCESS;
+}	

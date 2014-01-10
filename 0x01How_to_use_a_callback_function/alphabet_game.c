@@ -32,6 +32,7 @@ static ctrl_tool_callback_t alphabet_game_event={
 	alphabet_game_esc,	
 };
 
+
 #if 0
 static ctrl_tool_res_t alphabet_game_res[ALPHABET_GAME_WIDGET_NUM]={
 		{
@@ -149,10 +150,11 @@ int init_m_evt_code(m_evt_code_t *m_evt_code)
 		return AG_FAILED;
 	}
 	
-	m_evt_code->m_evt_type=M_EVT_OTHER;
+	m_evt_code->m_evt_type=M_EVT_NO_INPUT;
+	m_evt_code->m_evt_param.no_input_t.no_input=NO_INPUT_DATA;
 	memset(&m_evt_code->m_evt_param.mouse_t.mouse,0,sizeof(m_evt_code->m_evt_param.mouse_t.mouse));
-	m_evt_code->m_evt_param.key_t.key=KEY_NO_DATA;
-	m_evt_code->m_evt_param.other_t.other=OTHER_NO_DATA;
+	m_evt_code->m_evt_param.key_t.key=NO_KEY_DATA;
+	m_evt_code->m_evt_param.other_t.other=NO_OTHER_DATA;
 
 	return AG_SUCCESS;
 }

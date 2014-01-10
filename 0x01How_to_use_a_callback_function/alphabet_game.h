@@ -39,6 +39,7 @@
 
 #define ALPHABET_GAME_START_X			1
 
+
 /*<==========alphabet game child status event==========*/
 #define ALPHABET_GAME_START_WIDGET_NUM	(26)
 #define ALPHABET_GAME_HELP_WIDGET_NUM	(1)
@@ -62,6 +63,7 @@ typedef struct alphabet_game{
 	screen_t scr;
 	status_t status;
 	m_evt_code_t m_evt_code;
+	p_ctrl_tool_t main_status;
 	unsigned int delay_time;
 }alphabet_game_t;
 

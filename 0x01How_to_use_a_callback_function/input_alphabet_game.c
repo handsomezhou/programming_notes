@@ -48,14 +48,14 @@ static int get_m_evt_code(alphabet_game_t *alphabet_game,m_evt_code_t *m_evt_cod
 
 	init_m_evt_code(mec);
 
-	int chr=KEY_NO_DATA;
+	int chr=NO_INPUT_DATA;
 	mousemask(ALL_MOUSE_EVENTS,NULL);
 	chr=wgetch(ag->scr.win);
 	switch(chr){
 		case NO_INPUT_DATA://no need to deal
 			mvwprintw(ag->scr.win,8,1,"%s","NO_INPUT_DATA");
-			ag->m_evt_code.m_evt_type=M_EVT_OTHER;
-			ag->m_evt_code.m_evt_param.other_t.other=OTHER_NO_DATA;
+			ag->m_evt_code.m_evt_type=M_EVT_NO_INPUT;
+			ag->m_evt_code.m_evt_param.other_t.other=NO_INPUT_DATA;
 			break;
 		case KEY_MOUSE:	//mouse event
 			mvwprintw(ag->scr.win,10,1,"%s","KEY_MOUSE");
