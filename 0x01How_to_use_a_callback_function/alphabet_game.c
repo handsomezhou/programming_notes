@@ -32,13 +32,17 @@ static ctrl_tool_callback_t alphabet_game_event={
 	alphabet_game_esc,	
 };
 
-
-#if 0
 static ctrl_tool_res_t alphabet_game_res[ALPHABET_GAME_WIDGET_NUM]={
-		{
-			},
+	{{ALPHABET_GAME_START_Y,ALPHABET_GAME_START_X,ALPHABET_GAME_START_HEIGHT,ALPHABET_GAME_START_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_START},
+
+	{{ALPHABET_GAME_HELP_Y,ALPHABET_GAME_HELP_X,ALPHABET_GAME_HELP_HEIGHT,ALPHABET_GAME_HELP_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_HELP},
+
+	{{ALPHABET_GAME_EXIT_Y,ALPHABET_GAME_EXIT_X,ALPHABET_GAME_EXIT_HEIGHT,ALPHABET_GAME_EXIT_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_EXIT},			
 };
-#endif
+
 /*alphabet game child status event:game start,game help,game exit*/
 static int alphabet_game_start_paint(rect_t *p_rect,int index, bool sel_flag);
 static int alphabet_game_start_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index);
@@ -109,6 +113,14 @@ alphabet_game_t *init_alphabet_game(void)
 	
 	set_delay_time(&ag->delay_time,DELAY_TIME);
 
+	ag->main_status=ctrl_tool_init(ALPHABET_GAME_WIDGET_NUM,alphabet_game_res,&alphabet_game_exit_event);
+	if(NULL==ag->main_status){
+		free(ag);
+		ag=NULL;
+		
+		return NULL;
+	}
+
 	return ag;
 }
 
@@ -119,8 +131,10 @@ void exit_alphabet_game(alphabet_game_t *alphabet_game)
 	if(NULL==ag){
 		return;
 	}
+	ctrl_tool_free(ag->main_status);
+	
 	exit_screen(&ag->scr);
-
+	
 	free(ag);
 	ag=NULL;
 	
@@ -175,6 +189,10 @@ static int init_screen(screen_t *screen)
 	clear();
 	if(has_colors()){
 		start_color();
+		init_pair(COLOR_FOREGROUND,COLOR_BLUE,COLOR_BLACK);
+		init_pair(COLOR_ICON_NORMAL,COLOR_BLUE,COLOR_BLACK);
+		init_pair(COLOR_ICON_SELECT,COLOR_GREEN,COLOR_BLACK);
+		
 	}
 
 	scr->win=stdscr;
