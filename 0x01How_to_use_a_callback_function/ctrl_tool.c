@@ -97,11 +97,12 @@ int	ctrl_tool_handle(const p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_
 	return CTRL_TOOL_SUCCESS;
 }
 
-int ctrl_tool_paint(const p_void_ctrl_tool_t p_void_ctrl_tool)
+int ctrl_tool_paint(const p_void_ctrl_tool_t p_void_ctrl_tool,const void *screen)
 {
 	int i=0;
 	const ctrl_tool_t *p_ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;
-	if(NULL==p_ctrl_tool){
+	const void *scr=screen;
+	if(NULL==p_ctrl_tool||NULL==scr){
 		return CTRL_TOOL_FAILED;
 	}
 
@@ -111,13 +112,12 @@ int ctrl_tool_paint(const p_void_ctrl_tool_t p_void_ctrl_tool)
 
 		if(NULL!=p_ctrl_tool->p_ctrl_tool_callback->pf_event_paint){
 			if(i==p_ctrl_tool->cur_item){
-				p_ctrl_tool->p_ctrl_tool_callback->pf_event_paint(&p_ctrl_tool->p_ctrl_tool_resource[i].ctrl_tool_res.rect,i,TRUE);
+				p_ctrl_tool->p_ctrl_tool_callback->pf_event_paint(scr,&p_ctrl_tool->p_ctrl_tool_resource[i].ctrl_tool_res.rect,i,TRUE);
 			}else{
-				p_ctrl_tool->p_ctrl_tool_callback->pf_event_paint(&p_ctrl_tool->p_ctrl_tool_resource[i].ctrl_tool_res.rect,i,FALSE);					
+				p_ctrl_tool->p_ctrl_tool_callback->pf_event_paint(scr,&p_ctrl_tool->p_ctrl_tool_resource[i].ctrl_tool_res.rect,i,FALSE);					
 			}
 		}
 	}
-
 
 	return CTRL_TOOL_SUCCESS;
 }

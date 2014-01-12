@@ -15,7 +15,7 @@ static int paint_child_status_help(alphabet_game_t *alphabet_game);
 static int paint_child_status_exit(alphabet_game_t *alphabet_game);
 static int paint_child_status_default(alphabet_game_t * alphabet_game);
 
-static int draw_main_status_foreground(screen_t *screen);
+//int draw_main_status_foreground(screen_t *screen);
 static int draw_child_status_start_foreground(screen_t *screen);
 static int draw_child_status_help_foreground(screen_t *screen);
 static int draw_child_status_exit_foreground(screen_t *screen);
@@ -98,7 +98,9 @@ static int paint_main_status(alphabet_game_t *alphabet_game)
 	if(NULL==ag){
 		return AG_FAILED;
 	}
-	draw_main_status_foreground(&ag->scr);
+	
+	ctrl_tool_paint(ag->main_status,(void *)&ag->scr);
+	
 	return AG_SUCCESS;
 }
 
@@ -130,15 +132,12 @@ static int paint_child_status_default(alphabet_game_t * alphabet_game)
 	return AG_SUCCESS;
 }
 
-static int draw_main_status_foreground(screen_t *screen)
+int draw_main_status_foreground(const screen_t *screen)
 {
-	screen_t *scr=screen;
+	const screen_t *scr=screen;
 	if(NULL==scr){
 		return AG_FAILED;
 	}
-
-	scr->foreground.top=(scr->background.height-scr->foreground.height)/2;
-	scr->foreground.left=(scr->background.width-scr->foreground.width)/2;
 
 	open_colors(COLOR_FOREGROUND,A_BOLD);
 	show_box(scr->win,scr->foreground.top,scr->foreground.left,scr->foreground.top+scr->foreground.height-1,scr->foreground.left+scr->foreground.width-1,A_BOLD);
@@ -185,6 +184,8 @@ static int update_screen_size(screen_t *screen)
 	if((height!=scr->background.height)||(width!=scr->background.width)){
 		scr->background.height=height;
 		scr->background.width=width;
+		scr->foreground.top=(scr->background.height-scr->foreground.height)/2;
+		scr->foreground.left=(scr->background.width-scr->foreground.width)/2;
 		set_screen_change(scr,TRUE);
 	}
 	
@@ -238,6 +239,12 @@ static void open_colors(color_t type, int attrs)
 		case COLOR_FOREGROUND:
 			if(has_colors()){attron(COLOR_PAIR(COLOR_FOREGROUND)|attrs);}
 			break;
+		case COLOR_ICON_NORMAL:
+			if(has_colors()){attron(COLOR_PAIR(COLOR_ICON_NORMAL)|attrs);}
+			break;
+		case COLOR_ICON_SELECT:
+			if(has_colors()){attron(COLOR_PAIR(COLOR_ICON_SELECT)|attrs);}
+			break;
 		default:
 			break;
 	}
@@ -251,6 +258,12 @@ static void close_colors(color_t type, int attrs)
 		case COLOR_FOREGROUND:
 			if(has_colors()){attroff(COLOR_PAIR(COLOR_FOREGROUND)|attrs);}
 			break;
+		case COLOR_ICON_NORMAL:
+			if(has_colors()){attroff(COLOR_PAIR(COLOR_ICON_NORMAL)|attrs);}
+			break;
+		case COLOR_ICON_SELECT:
+			if(has_colors()){attroff(COLOR_PAIR(COLOR_ICON_SELECT)|attrs);}
+			break;
 		default:
 			break;
 	}
@@ -258,4 +271,31 @@ static void close_colors(color_t type, int attrs)
 	return;
 }
 
+int show_button(const screen_t *scr,int offset_y,int offset_x,int sel_flag,const char *text,int attrs)
+{
+	if(NULL==scr){
+		return AG_FAILED;
+	}
+	switch(sel_flag){
+		case TRUE:
+			open_colors(COLOR_ICON_SELECT,A_BOLD);
+			break;
+		default:			
+			open_colors(COLOR_ICON_NORMAL,A_BOLD);
+			break;
+	}
+
+	mvwprintw(scr->win,scr->foreground.top+offset_y,scr->foreground.left+offset_x,"%s",text);
+	
+	switch(sel_flag){
+		case TRUE:
+			close_colors(COLOR_ICON_SELECT,A_BOLD);
+			break;
+		default:			
+			close_colors(COLOR_ICON_NORMAL,A_BOLD);
+			break;
+	}		
+	
+	return AG_SUCCESS;
+}
 

@@ -8,5 +8,9 @@
 
 extern int paint_alphabet_game(alphabet_game_t *alphabet_game);
 
+extern int draw_main_status_foreground(const screen_t *screen);
+extern int show_button(const screen_t *scr,int offset_y,int offset_x,int sel_flag,const char *text,int attrs);
+
+
 #endif	/*OUTPUT_ALPHABET_GAME_H*/
 
