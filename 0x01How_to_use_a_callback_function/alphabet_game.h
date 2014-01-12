@@ -11,7 +11,6 @@
 #include "message_event.h"
 #include "ctrl_tool.h"
 
-
 #define GAME_NAME		"Alphabet Game"
 
 #define AG_SUCCESS		(0)

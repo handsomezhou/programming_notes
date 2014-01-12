@@ -1,6 +1,7 @@
 /**
   *  Copyright (C) 2013-12-21  Handsome Zhou
   */
+
 #include <stdlib.h>
 #include "alphabet_game.h"
 #include "output_alphabet_game.h"

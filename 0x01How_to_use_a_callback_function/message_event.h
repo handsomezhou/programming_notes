@@ -1,7 +1,6 @@
 /**
   *  Copyright (C) 2013-12-21  Handsome Zhou
   */
-
 #ifndef MESSAGE_EVENT_H
 #define MESSAGE_EVENT_H
 

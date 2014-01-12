@@ -1,7 +1,6 @@
 /**
   *  Copyright (C) 2013-12-21  Handsome Zhou
   */
-
 #ifndef HANDLE_ALPHABET_GAME_H
 #define	HANDLE_ALPHABET_GAME_H
 

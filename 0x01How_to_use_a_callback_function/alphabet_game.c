@@ -14,7 +14,6 @@ static void exit_screen(screen_t *screen);
 
 static int set_delay_time(unsigned int *time, unsigned int delay_time);
 
-
 /*alphabet game main status event*/
 static int alphabet_game_paint(rect_t *p_rect,int index, bool sel_flag);
 static int alphabet_game_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index);

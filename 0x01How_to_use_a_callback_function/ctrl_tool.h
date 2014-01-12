@@ -1,7 +1,6 @@
 /**
   *  Copyright (C) 2013-12-21  Handsome Zhou (Reference TangQiWen's code)
   */
-
 #ifndef CTRL_TOOL_H
 #define CTRL_TOOL_H
 

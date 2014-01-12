@@ -118,6 +118,7 @@ int ctrl_tool_paint(const p_void_ctrl_tool_t p_void_ctrl_tool)
 		}
 	}
 
+
 	return CTRL_TOOL_SUCCESS;
 }
 

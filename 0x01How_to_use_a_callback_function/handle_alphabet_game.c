@@ -1,7 +1,6 @@
 /**
   *  Copyright (C) 2013-12-21  Handsome Zhou
   */
-
 #include "alphabet_game.h"
 #include "handle_alphabet_game.h"
 
