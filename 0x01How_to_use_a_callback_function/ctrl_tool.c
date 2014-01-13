@@ -183,6 +183,58 @@ static int ctrl_tool_mouse_event(const void *screen, p_void_ctrl_tool_t p_void_c
 
 static int ctrl_tool_key_event(p_void_ctrl_tool_t p_void_ctrl_tool, m_evt_code_t *p_m_evt_code)
 {
+	ctrl_tool_t *ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;
+	m_evt_code_t *m_evt_code=p_m_evt_code;
+	int i=0;
+	if((NULL==ctrl_tool)||(NULL==m_evt_code)){
+		return CTRL_TOOL_FAILED;
+	}
+
+	switch(m_evt_code->m_evt_param.key_t.key){
+		case KEY_UP:
+		case KEY_LEFT:
+//			(ctrl_tool->cur_item>0)?(ctrl_tool->cur_item--):(ctrl_tool->cur_item=ctrl_tool->total_item-1);
+			for(i=0; i<ctrl_tool->total_item; i++){
+				if(0==ctrl_tool->cur_item){
+					if(FALSE==ctrl_tool->loopmode){
+						break;
+					}
+				}
+				
+				ctrl_tool->cur_item=(ctrl_tool->cur_item>0)?(ctrl_tool->cur_item-1):(ctrl_tool->total_item-1);
+				if(TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible){
+					break;
+				}
+			}
+
+			if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_select)){
+				ctrl_tool->p_ctrl_tool_callback->pf_event_select(m_evt_code,ctrl_tool->cur_item);
+			}
+			
+			break;
+		case KEY_DOWN:
+		case KEY_RIGHT:
+			//(ctrl_tool->cur_item<ctrl_tool->total_item-1)?(ctrl_tool->cur_item++):(ctrl_tool->cur_item=0);			
+			for(i=0; i<ctrl_tool->total_item; i++){
+				if(ctrl_tool->total_item-1==ctrl_tool->cur_item){
+					if(FALSE==ctrl_tool->loopmode){
+						break;
+					}					
+				}
+
+				ctrl_tool->cur_item=(ctrl_tool->cur_item<ctrl_tool->total_item-1)?(ctrl_tool->cur_item+1):(0);
+				if(TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible){
+					break;
+				}				
+			}
+			
+			if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_select)){
+				ctrl_tool->p_ctrl_tool_callback->pf_event_select(m_evt_code,ctrl_tool->cur_item);
+			}			
+			break;
+		default:
+			break;
+	}
 	
 	return CTRL_TOOL_SUCCESS;
 }
