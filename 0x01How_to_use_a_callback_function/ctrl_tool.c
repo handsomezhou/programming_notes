@@ -7,6 +7,9 @@
 
 #define MAX_DATA_LEN	(256)
 
+static int ctrl_tool_mouse_event(const void *screen, p_void_ctrl_tool_t p_void_ctrl_tool, m_evt_code_t *p_m_evt_code);
+static int ctrl_tool_key_event(p_void_ctrl_tool_t p_void_ctrl_tool, m_evt_code_t *p_m_evt_code);
+
 typedef struct ctrl_tool_resource{
 	ctrl_tool_res_t ctrl_tool_res;
 	bool visible;
@@ -90,14 +93,35 @@ p_void_ctrl_tool_t ctrl_tool_init(int res_num, const ctrl_tool_res_t *p_res, con
 	return p_ctrl_tool;
 }
 
-int	ctrl_tool_handle(const p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_t *p_m_evt_code)
+int	ctrl_tool_handle(const void *screen, const p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_t *p_m_evt_code)
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	const void *scr=screen;
+	const p_void_ctrl_tool_t pvct=p_void_ctrl_tool;
+	const m_evt_code_t *pmec=p_m_evt_code;
+	if(NULL==scr||NULL==pvct||NULL==pmec){
+		return CTRL_TOOL_FAILED;
+	}
+	
+	switch(pmec->m_evt_type){
+		case M_EVT_NO_INPUT://no need to deal with
+			break;
+		case M_EVT_MOUSE:
+			ctrl_tool_mouse_event(scr,pvct,pmec);
+			break;
+		case M_EVT_KEY:
+			ctrl_tool_key_event(pvct,pmec);
+			break;
+		case M_EVT_OTHER:	//no need to deal with
+			break;
+		default:			//no need to deal with
+			break;
+	}
 
 	return CTRL_TOOL_SUCCESS;
 }
 
-int ctrl_tool_paint(const p_void_ctrl_tool_t p_void_ctrl_tool,const void *screen)
+int ctrl_tool_paint(const void *screen, const p_void_ctrl_tool_t p_void_ctrl_tool)
 {
 	int i=0;
 	const ctrl_tool_t *p_ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;
@@ -151,4 +175,15 @@ void ctrl_tool_free(p_void_ctrl_tool_t p_void_ctrl_tool)
 	return;
 }
 
+static int ctrl_tool_mouse_event(const void *screen, p_void_ctrl_tool_t p_void_ctrl_tool, m_evt_code_t *p_m_evt_code)
+{
+
+	return CTRL_TOOL_SUCCESS;
+}
+
+static int ctrl_tool_key_event(p_void_ctrl_tool_t p_void_ctrl_tool, m_evt_code_t *p_m_evt_code)
+{
+	
+	return CTRL_TOOL_SUCCESS;
+}
 

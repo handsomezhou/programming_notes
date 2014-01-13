@@ -34,8 +34,8 @@ typedef struct ctrl_tool_callback{
 }ctrl_tool_callback_t;
 
 extern p_void_ctrl_tool_t ctrl_tool_init(int res_num, const ctrl_tool_res_t *p_res, const ctrl_tool_callback_t *p_callback_fun);
-extern int	ctrl_tool_handle(const p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_t *p_m_evt_code);
-extern int ctrl_tool_paint(const p_void_ctrl_tool_t p_void_ctrl_tool, const void *screen);
+extern int	ctrl_tool_handle(const void *screen, const p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_t *p_m_evt_code);
+extern int ctrl_tool_paint(const void *screen, const p_void_ctrl_tool_t p_void_ctrl_tool);
 extern void ctrl_tool_free(p_void_ctrl_tool_t p_void_ctrl_tool);
 #ifdef __cplusplus
 }

@@ -47,8 +47,8 @@ static int handle_main_status(alphabet_game_t *alphabet_game)
 	}
 	
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	mvwprintw(ag->scr.win,3,10,"I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	ctrl_tool_handle(ag->main_status,&ag->m_evt_code);
+	//mvwprintw(ag->scr.win,3,10,"I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	ctrl_tool_handle(&ag->scr,ag->main_status,&ag->m_evt_code);
 	
 	return AG_SUCCESS;
 }
