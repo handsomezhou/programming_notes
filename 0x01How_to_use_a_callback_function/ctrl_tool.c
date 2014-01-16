@@ -7,8 +7,13 @@
 
 #define MAX_DATA_LEN	(256)
 
-static int ctrl_tool_mouse_event(const void *screen, p_void_ctrl_tool_t p_void_ctrl_tool, m_evt_code_t *p_m_evt_code);
-static int ctrl_tool_key_event(p_void_ctrl_tool_t p_void_ctrl_tool, m_evt_code_t *p_m_evt_code);
+static int ctrl_tool_mouse_event(const void *screen, p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_t *p_m_evt_code);
+static int ctrl_tool_key_event(p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
+static int ctrl_tool_prev_focus(p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
+static int ctrl_tool_next_focus(p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
+static int ctrl_tool_response_focus(p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
+static int ctrl_tool_response_exit(p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
+
 
 typedef struct ctrl_tool_resource{
 	ctrl_tool_res_t ctrl_tool_res;
@@ -175,67 +180,184 @@ void ctrl_tool_free(p_void_ctrl_tool_t p_void_ctrl_tool)
 	return;
 }
 
-static int ctrl_tool_mouse_event(const void *screen, p_void_ctrl_tool_t p_void_ctrl_tool, m_evt_code_t *p_m_evt_code)
+static int ctrl_tool_mouse_event(const void *screen, p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_t *p_m_evt_code)
 {
+	int cur_item=-1;
+	const void *scr=screen;
+	ctrl_tool_t *ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
 
-	return CTRL_TOOL_SUCCESS;
+	if((NULL==scr)&&(NULL==ctrl_tool)&&(NULL==m_evt_code)){
+		return cur_item;
+	}
+
+	switch(m_evt_code->m_evt_param.mouse_t.mouse.bstate){
+		case MOUSE_WHEEL_OUT:
+			cur_item=ctrl_tool_prev_focus(ctrl_tool,m_evt_code);
+			break;
+		case MOUSE_WHEEL_IN:			
+			cur_item=ctrl_tool_next_focus(ctrl_tool,m_evt_code);
+			break;
+		case MOUSE_WHEEL_CLICK:	//exit
+			cur_item=ctrl_tool_response_exit(ctrl_tool,m_evt_code);
+			break;		
+		case MOUSE_LEFT_UP:
+		case MOUSE_WHEEL_UP:
+			break;
+		case MOUSE_LEFT_DOWN:	
+		case MOUSE_WHEEL_DOWN:	
+			break;
+		case MOUSE_LEFT_CLICK:
+			cur_item=ctrl_tool_response_focus(ctrl_tool,m_evt_code);
+			break;	
+			
+		default:
+			break;
+	}
+	
+	return cur_item;
 }
 
-static int ctrl_tool_key_event(p_void_ctrl_tool_t p_void_ctrl_tool, m_evt_code_t *p_m_evt_code)
+static int ctrl_tool_key_event(p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_t *p_m_evt_code)
 {
 	ctrl_tool_t *ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;
-	m_evt_code_t *m_evt_code=p_m_evt_code;
-	int i=0;
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	int cur_item=-1;
 	if((NULL==ctrl_tool)||(NULL==m_evt_code)){
-		return CTRL_TOOL_FAILED;
+		return cur_item;
 	}
 
 	switch(m_evt_code->m_evt_param.key_t.key){
 		case KEY_UP:
 		case KEY_LEFT:
-//			(ctrl_tool->cur_item>0)?(ctrl_tool->cur_item--):(ctrl_tool->cur_item=ctrl_tool->total_item-1);
-			for(i=0; i<ctrl_tool->total_item; i++){
-				if(0==ctrl_tool->cur_item){
-					if(FALSE==ctrl_tool->loopmode){
-						break;
-					}
-				}
-				
-				ctrl_tool->cur_item=(ctrl_tool->cur_item>0)?(ctrl_tool->cur_item-1):(ctrl_tool->total_item-1);
-				if(TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible){
-					break;
-				}
-			}
-
-			if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_select)){
-				ctrl_tool->p_ctrl_tool_callback->pf_event_select(m_evt_code,ctrl_tool->cur_item);
-			}
-			
+			cur_item=ctrl_tool_prev_focus(ctrl_tool,m_evt_code);
 			break;
+			
 		case KEY_DOWN:
-		case KEY_RIGHT:
-			//(ctrl_tool->cur_item<ctrl_tool->total_item-1)?(ctrl_tool->cur_item++):(ctrl_tool->cur_item=0);			
-			for(i=0; i<ctrl_tool->total_item; i++){
-				if(ctrl_tool->total_item-1==ctrl_tool->cur_item){
-					if(FALSE==ctrl_tool->loopmode){
-						break;
-					}					
-				}
-
-				ctrl_tool->cur_item=(ctrl_tool->cur_item<ctrl_tool->total_item-1)?(ctrl_tool->cur_item+1):(0);
-				if(TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible){
-					break;
-				}				
-			}
-			
-			if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_select)){
-				ctrl_tool->p_ctrl_tool_callback->pf_event_select(m_evt_code,ctrl_tool->cur_item);
-			}			
+		case KEY_RIGHT:			
+			cur_item=ctrl_tool_next_focus(ctrl_tool,m_evt_code);
 			break;
+			
+		case KEY_ENTER:
+			cur_item=ctrl_tool_response_focus(ctrl_tool,m_evt_code);
+			break;
+			
+		case KEY_ESC:
+			cur_item=ctrl_tool_response_exit(ctrl_tool,m_evt_code);
+			break;
+			
 		default:
+			cur_item=-1;
 			break;
 	}
 	
-	return CTRL_TOOL_SUCCESS;
+	return cur_item;
 }
 
+static int ctrl_tool_prev_focus(p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code)
+{
+	int i=0;
+	int cur_item=-1;
+	ctrl_tool_t *ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;	
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	if((NULL==ctrl_tool)||(NULL==m_evt_code)){
+		return cur_item;
+	}
+	for(i=0; i<ctrl_tool->total_item; i++){
+		if(0==ctrl_tool->cur_item){
+			if(FALSE==ctrl_tool->loopmode){
+				break;
+			}
+		}
+		
+		ctrl_tool->cur_item=(ctrl_tool->cur_item>0)?(ctrl_tool->cur_item-1):(ctrl_tool->total_item-1);
+		cur_item=ctrl_tool->cur_item;
+		if(TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible){
+			break;
+		}
+	}
+
+	if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_select)){
+		ctrl_tool->p_ctrl_tool_callback->pf_event_select(m_evt_code,ctrl_tool->cur_item);
+	}
+			
+	return cur_item;
+}
+
+static int ctrl_tool_next_focus(p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code)
+{
+	int i=0;
+	int cur_item=-1;
+	ctrl_tool_t *ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;	
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	if((NULL==ctrl_tool)||(NULL==m_evt_code)){
+		return cur_item;
+	}
+	
+	for(i=0; i<ctrl_tool->total_item; i++){
+		if(ctrl_tool->total_item-1==ctrl_tool->cur_item){
+			if(FALSE==ctrl_tool->loopmode){
+				break;
+			}					
+		}
+
+		ctrl_tool->cur_item=(ctrl_tool->cur_item<ctrl_tool->total_item-1)?(ctrl_tool->cur_item+1):(0);
+		cur_item=ctrl_tool->cur_item;
+		if(TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible){
+			break;
+		}				
+	}
+		
+	if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_select)){
+		ctrl_tool->p_ctrl_tool_callback->pf_event_select(m_evt_code,ctrl_tool->cur_item);
+	}	
+
+	return cur_item;
+}
+
+static int ctrl_tool_response_focus(p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code)
+{
+	int cur_item=-1;
+	
+	ctrl_tool_t *ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	if((NULL==ctrl_tool)||(NULL==m_evt_code)){
+		return cur_item;
+	}
+	switch(m_evt_code->m_evt_type){
+		case M_EVT_MOUSE:
+			if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_pen_down)){
+				ctrl_tool->p_ctrl_tool_callback->pf_event_pen_down(m_evt_code,ctrl_tool->cur_item);
+				cur_item=ctrl_tool->cur_item;
+			}
+			break;
+		case M_EVT_KEY:
+			if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_enter)){
+				ctrl_tool->p_ctrl_tool_callback->pf_event_enter(m_evt_code,ctrl_tool->cur_item);
+				cur_item=ctrl_tool->cur_item;
+			}
+			break;
+		default:
+			cur_item=-1;
+			break;
+	}
+
+	return cur_item;
+}
+
+static int ctrl_tool_response_exit(p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code)
+{
+	int cur_item=-1;
+	ctrl_tool_t *ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	if((NULL==ctrl_tool)||(NULL==m_evt_code)){
+		return cur_item;
+	}
+	
+	if(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_exit){
+		ctrl_tool->p_ctrl_tool_callback->pf_event_exit(m_evt_code,ctrl_tool->cur_item);
+	}
+	cur_item=ctrl_tool->cur_item;
+	
+	return cur_item;
+}

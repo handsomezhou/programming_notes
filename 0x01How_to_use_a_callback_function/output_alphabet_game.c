@@ -99,6 +99,7 @@ static int paint_main_status(alphabet_game_t *alphabet_game)
 		return AG_FAILED;
 	}
 	
+	draw_main_status_foreground(&ag->scr);
 	ctrl_tool_paint((void *)&ag->scr,ag->main_status);
 	
 	return AG_SUCCESS;

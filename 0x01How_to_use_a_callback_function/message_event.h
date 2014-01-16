@@ -10,6 +10,21 @@
 #define NO_KEY_DATA		(-1)
 #define NO_OTHER_DATA	(-1)
 
+/*redefine mouse event according to mouse event of The Ncurses  library*/
+#define MOUSE_LEFT_DOWN 	BUTTON1_PRESSED
+#define MOUSE_LEFT_UP		BUTTON1_RELEASED
+#define MOUSE_LEFT_CLICK 	BUTTON1_CLICKED
+
+#define MOUSE_WHEEL_DOWN 	BUTTON2_PRESSED
+#define MOUSE_WHEEL_UP		BUTTON2_RELEASED
+#define MOUSE_WHEEL_CLICK	BUTTON2_CLICKED//0x100		//get the value by myself via testing mouse
+#define MOUSE_WHEEL_OUT		0x80000		
+#define MOUSE_WHEEL_IN		0x8000000
+
+#define MOUSE_RIGHT_DOWN 	BUTTON3_PRESSED		//unused
+#define MOUSE_RIGHT_UP		BUTTON3_RELEASED	//unused
+#define MOUSE_RIGHT_CLICK 	BUTTON3_CLICKED		//unused
+
 typedef int 	m_evt_no_input_t;
 typedef MEVENT 	m_evt_mouse_t;
 typedef int	   	m_evt_key_t;
