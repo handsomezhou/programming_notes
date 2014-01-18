@@ -25,7 +25,8 @@ extern "C" {
 #define CTRL_TOOL_SUCCESS	(0)
 #define CTRL_TOOL_FAILED	(-1)
 
-typedef void* p_void_ctrl_tool_t;
+typedef void *p_void_ctrl_tool_t;
+typedef void *p_void_data_t;	//pass data point that call the control tool
 
 typedef struct ctrl_tool_res{
 	rect_t rect;	//show location
@@ -35,18 +36,20 @@ typedef struct ctrl_tool_res{
 }ctrl_tool_res_t;
 
 typedef struct ctrl_tool_callback{
-	int (* pf_event_paint)(const void *screen, rect_t *p_rect, int index, bool sel_flag);
-	int (* pf_event_pen_up)(const m_evt_code_t *p_m_evt_code, int sel_index);
-	int (* pf_event_pen_down)(const m_evt_code_t *p_m_evt_code, int sel_index);
-	int (* pf_event_select)(const m_evt_code_t *p_m_evt_code, int sel_index);
-	int (* pf_event_enter)(const m_evt_code_t *p_m_evt_code, int sel_index);
-	int (* pf_event_exit)(const m_evt_code_t *p_m_evt_code, int sel_index);
+	int (* pf_event_paint)(p_void_data_t p_void_data, rect_t *p_rect, int index, bool sel_flag);
+	int (* pf_event_pen_up)(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+	int (* pf_event_pen_down)(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+	int (* pf_event_select)(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+	int (* pf_event_enter)(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+	int (* pf_event_exit)(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 }ctrl_tool_callback_t;
 
 extern p_void_ctrl_tool_t ctrl_tool_init(int res_num, const ctrl_tool_res_t *p_res, const ctrl_tool_callback_t *p_callback_fun);
-extern int	ctrl_tool_handle(const void *screen, const p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_t *p_m_evt_code);
-extern int ctrl_tool_paint(const void *screen, const p_void_ctrl_tool_t p_void_ctrl_tool);
+extern int	ctrl_tool_handle(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_t *p_m_evt_code);
+extern int ctrl_tool_paint(const p_void_data_t p_void_data, const p_void_ctrl_tool_t p_void_ctrl_tool);
 extern void ctrl_tool_free(p_void_ctrl_tool_t p_void_ctrl_tool);
+extern bool ctrl_tool_set_loop_mode(p_void_ctrl_tool_t p_void_ctrl_tool, bool loop_mode);
+extern bool ctrl_tool_set_visible(p_void_ctrl_tool_t p_void_ctrl_tool, int item, bool visible);
 #ifdef __cplusplus
 }
 #endif	/*__cplusplus*/

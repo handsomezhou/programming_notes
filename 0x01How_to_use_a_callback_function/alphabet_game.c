@@ -17,12 +17,12 @@ static void exit_screen(screen_t *screen);
 static int set_delay_time(unsigned int *time, unsigned int delay_time);
 
 /*alphabet game main status event*/
-static int alphabet_game_paint(const void *screen,rect_t *p_rect,int index, bool sel_flag);
-static int alphabet_game_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_pen_down(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_select(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_enter(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_exit(const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag);
+static int alphabet_game_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 
 static ctrl_tool_callback_t alphabet_game_event={
 	alphabet_game_paint,
@@ -45,12 +45,12 @@ static ctrl_tool_res_t alphabet_game_res[ALPHABET_GAME_WIDGET_NUM]={
 };
 
 /*alphabet game child status event:game start,game help,game exit*/
-static int alphabet_game_start_paint(const void *screen,rect_t *p_rect,int index, bool sel_flag);
-static int alphabet_game_start_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_start_pen_down(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_start_select(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_start_enter(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_start_exit(const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_start_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag);
+static int alphabet_game_start_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_start_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_start_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_start_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_start_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 
 static ctrl_tool_callback_t alphabet_game_start_event={
 	alphabet_game_start_paint,
@@ -61,12 +61,12 @@ static ctrl_tool_callback_t alphabet_game_start_event={
 	alphabet_game_start_exit,	
 };
 
-static int alphabet_game_help_paint(const void *screen, rect_t *p_rect,int index, bool sel_flag);
-static int alphabet_game_help_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_help_pen_down(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_help_select(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_help_enter(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_help_exit(const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_help_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag);
+static int alphabet_game_help_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_help_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_help_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_help_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_help_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 
 static ctrl_tool_callback_t alphabet_game_help_event={
 	alphabet_game_help_paint,
@@ -77,12 +77,12 @@ static ctrl_tool_callback_t alphabet_game_help_event={
 	alphabet_game_help_exit,	
 };
 
-static int alphabet_game_exit_paint(const void *screen, rect_t *p_rect,int index, bool sel_flag);
-static int alphabet_game_exit_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_exit_pen_down(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_exit_select(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_exit_enter(const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_exit_exit(const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_exit_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag);
+static int alphabet_game_exit_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_exit_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_exit_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_exit_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+static int alphabet_game_exit_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 
 static ctrl_tool_callback_t alphabet_game_exit_event={
 	alphabet_game_exit_paint,
@@ -240,9 +240,10 @@ static int set_delay_time(unsigned int *time, unsigned int delay_time)
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_paint(const void *screen, rect_t *p_rect, int index, bool sel_flag)
+static int alphabet_game_paint(p_void_data_t p_void_data, rect_t *p_rect, int index, bool sel_flag)
 {
-	const screen_t *scr=(const screen_t *)screen;
+	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
+	screen_t *scr=&ag->scr;
 	rect_t *rct=p_rect;
 	if(NULL==scr||NULL==rct){
 		return AG_FAILED;
@@ -254,124 +255,86 @@ static int alphabet_game_paint(const void *screen, rect_t *p_rect, int index, bo
 	return AG_SUCCESS;
 }
 	
-static int alphabet_game_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_pen_down(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_select(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_enter(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_exit(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
+	if((NULL==ag)){
+		return AG_FAILED;
+	}
+
+	ag->status=CHILD_STATUS_EXIT;
+		
 	return AG_SUCCESS;
 }
 
 
 
 
-static int alphabet_game_start_paint(const void *screen, rect_t *p_rect,int index, bool sel_flag)
+static int alphabet_game_start_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_start_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_start_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_start_pen_down(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_start_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_start_select(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_start_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_start_enter(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_start_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_start_exit(const m_evt_code_t *p_m_evt_code, int sel_index)
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-
-
-static int alphabet_game_help_paint(const void *screen, rect_t *p_rect,int index, bool sel_flag)
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-static int alphabet_game_help_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index)	
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-static int alphabet_game_help_pen_down(const m_evt_code_t *p_m_evt_code, int sel_index)	
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-static int alphabet_game_help_select(const m_evt_code_t *p_m_evt_code, int sel_index)	
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-static int alphabet_game_help_enter(const m_evt_code_t *p_m_evt_code, int sel_index)
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-static int alphabet_game_help_exit(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_start_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
@@ -379,42 +342,86 @@ static int alphabet_game_help_exit(const m_evt_code_t *p_m_evt_code, int sel_ind
 }
 
 
-static int alphabet_game_exit_paint(const void *screen, rect_t *p_rect,int index, bool sel_flag)
+
+static int alphabet_game_help_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_exit_pen_up(const m_evt_code_t *p_m_evt_code, int sel_index)	
+static int alphabet_game_help_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)	
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_exit_pen_down(const m_evt_code_t *p_m_evt_code, int sel_index)	
+static int alphabet_game_help_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)	
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_exit_select(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_help_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)	
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_exit_enter(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_help_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
-static int alphabet_game_exit_exit(const m_evt_code_t *p_m_evt_code, int sel_index)
+static int alphabet_game_help_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
+{
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	
+	return AG_SUCCESS;
+}
+
+
+static int alphabet_game_exit_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag)
+{
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	
+	return AG_SUCCESS;
+}
+
+static int alphabet_game_exit_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)	
+{
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	
+	return AG_SUCCESS;
+}
+
+static int alphabet_game_exit_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)	
+{
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	
+	return AG_SUCCESS;
+}
+
+static int alphabet_game_exit_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
+{
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	
+	return AG_SUCCESS;
+}
+
+static int alphabet_game_exit_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
+{
+	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	
+	return AG_SUCCESS;
+}
+
+static int alphabet_game_exit_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
