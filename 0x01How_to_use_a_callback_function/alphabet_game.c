@@ -158,10 +158,10 @@ void sleep_delay_time(const unsigned int *time)
 	usleep(((NULL==time)?(DELAY_TIME_MIN):(*time)));	
 }
 
-int init_m_evt_code(m_evt_code_t *m_evt_code)
+int init_m_evt_code(m_evt_code_t *p_m_evt_code)
 {
-	m_evt_code_t *mec=m_evt_code;
-	if(NULL==mec){
+	m_evt_code_t *m_evt_code=p_m_evt_code;
+	if(NULL==m_evt_code){
 		return AG_FAILED;
 	}
 	
@@ -264,8 +264,29 @@ static int alphabet_game_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p
 
 static int alphabet_game_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	int index=sel_index;
+	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	if((NULL==ag)||(NULL==m_evt_code)){
+		return AG_FAILED;
+	}
+
+	switch(index){
+		case MAIN_STATUS_START:
+			ag->status=CHILD_STATUS_START;
+			break;
+		case MAIN_STATUS_HELP:
+			ag->status=CHILD_STATUS_HELP;
+			break;
+		case MAIN_STATUS_EXIT:
+			ag->status=CHILD_STATUS_EXIT;
+			break;
+		default:
+			break;
+	}
 	
+
 	return AG_SUCCESS;
 }
 
@@ -278,7 +299,27 @@ static int alphabet_game_select(p_void_data_t p_void_data, const m_evt_code_t *p
 
 static int alphabet_game_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	int index=sel_index;
+	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	if((NULL==ag)||(NULL==m_evt_code)){
+		return AG_FAILED;
+	}
+
+	switch(index){
+		case MAIN_STATUS_START:
+			ag->status=CHILD_STATUS_START;
+			break;
+		case MAIN_STATUS_HELP:
+			ag->status=CHILD_STATUS_HELP;
+			break;
+		case MAIN_STATUS_EXIT:
+			ag->status=CHILD_STATUS_EXIT;
+			break;
+		default:
+			break;
+	}
 	
 	return AG_SUCCESS;
 }
@@ -287,7 +328,8 @@ static int alphabet_game_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
-	if((NULL==ag)){
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	if((NULL==ag)||(NULL==m_evt_code)){
 		return AG_FAILED;
 	}
 

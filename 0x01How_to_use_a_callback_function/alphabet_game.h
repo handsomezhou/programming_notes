@@ -35,7 +35,7 @@
 #define ALPHABET_GAME_FOREGROUND_WIDTH	(60)
 
 /*==========alphabet game main status event==========>*/
-#define ALPHABET_GAME_WIDGET_NUM		(3)
+//#define ALPHABET_GAME_WIDGET_NUM		(3)
 
 #define ALPHABET_GAME_WIDGET_OFFSET_Y	(ALPHABET_GAME_FOREGROUND_HEIGHT/(ALPHABET_GAME_WIDGET_NUM+1))
 #define ALPHABET_GAME_START 			"start"
@@ -67,6 +67,26 @@ typedef enum{
 	CHILD_STATUS_EXIT,	 	//Status that enter the event of exit's button
 }status_t;
 
+typedef enum{
+	MAIN_STATUS_START=0,
+	MAIN_STATUS_HELP,
+	MAIN_STATUS_EXIT,
+	ALPHABET_GAME_WIDGET_NUM,
+}main_status_t;
+#if 0
+typedef enum{
+
+}child_status_start_t;
+
+typedef enum{
+
+}child_status_help_t;
+
+typedef enum{
+
+}child_status_exit_t;
+#endif
+
 typedef enum color{
 	//window 
 	COLOR_FOREGROUND=1,
@@ -94,5 +114,5 @@ extern alphabet_game_t *init_alphabet_game(void);
 extern void exit_alphabet_game(alphabet_game_t *alphabet_game);
 extern int set_alphabet_game_status(status_t *stts, status_t cur_status);
 extern void sleep_delay_time(const unsigned int *time);
-extern int init_m_evt_code(m_evt_code_t *m_evt_code);
+extern int init_m_evt_code(m_evt_code_t *p_m_evt_code);
 #endif	/*ALPHABET_GAME_H*/
