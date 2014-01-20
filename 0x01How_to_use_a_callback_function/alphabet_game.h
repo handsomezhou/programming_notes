@@ -31,8 +31,8 @@
 
 //#define ALPHABET_GAME_FOREGROUND_TOP	(0)		//Get background's top and left according to background window size
 //#define ALPHABET_GAME_FOREGROUND_LEFT	(0)
-#define ALPHABET_GAME_FOREGROUND_HEIGHT	(21)
-#define ALPHABET_GAME_FOREGROUND_WIDTH	(60)
+#define ALPHABET_GAME_FOREGROUND_HEIGHT	(24)
+#define ALPHABET_GAME_FOREGROUND_WIDTH	(63)
 
 /*==========alphabet game main status event==========>*/
 //#define ALPHABET_GAME_WIDGET_NUM		(3)
@@ -78,10 +78,10 @@
 /*								 */
 /*********************************/
 #define ALPHABET_GAME_ALPHABET_TOP				(ALPHABET_GAME_FOREGROUND_HEIGHT/4)// line=4
-#define ALPHABET_GAME_ALPHABET_LEFT				(ALPHABET_GAME_FOREGROUND_WIDTH/7)   // max(row)=7
+#define ALPHABET_GAME_ALPHABET_LEFT				(ALPHABET_GAME_FOREGROUND_WIDTH/7/2)   // max(row)=7
 #define ALPHABET_GAME_ALPHABET_HIGHT			(1)
 #define ALPHABET_GAME_ALPHABET_WIDTH			(1)
-#define ALPHABET_GAME_ALPHABET_OFFSET_HIGHT		(ALPHABET_GAME_FOREGROUND_HEIGHT/4)
+#define ALPHABET_GAME_ALPHABET_OFFSET_HIGHT		(ALPHABET_GAME_FOREGROUND_HEIGHT/(4+1))
 #define ALPHABET_GAME_ALPHABET_OFFSET_WIDTH		(ALPHABET_GAME_FOREGROUND_WIDTH/7)
 
 #define SETTING_ALPHABET_GAME_Y(index)		(ALPHABET_GAME_ALPHABET_TOP+(index)*ALPHABET_GAME_ALPHABET_OFFSET_HIGHT)
@@ -119,7 +119,13 @@
 //<===========================start===========================
 
 //===========================help===========================>
-#define ALPHABET_GAME_HELP_WIDGET_NUM	(1)
+//#define ALPHABET_GAME_HELP_WIDGET_NUM	(1)
+
+#define ALPHABET_GAME_HELP_BACK			"back"
+#define ALPHABET_GAME_HELP_BACK_Y		(ALPHABET_GAME_FOREGROUND_HEIGHT-2)
+#define ALPHABET_GAME_HELP_BACK_X		(((ALPHABET_GAME_FOREGROUND_WIDTH-sizeof(ALPHABET_GAME_HELP_BACK))/2))
+#define ALPHABET_GAME_HELP_BACK_HEIGHT	(1)
+#define ALPHABET_GAME_HELP_BACK_WIDTH	(sizeof(ALPHABET_GAME_HELP_BACK)-1)
 //<==========================help============================
 
 //===========================exit===========================>
@@ -140,14 +146,17 @@ typedef enum{
 	MAIN_STATUS_EXIT,
 	ALPHABET_GAME_WIDGET_NUM,
 }main_status_t;
+
+typedef enum{
+	CHILD_STATUS_HELP_BACK=0,
+	ALPHABET_GAME_HELP_WIDGET_NUM,
+}child_status_help_t;
+
 #if 0
 typedef enum{
 
 }child_status_start_t;
 
-typedef enum{
-
-}child_status_help_t;
 
 typedef enum{
 
@@ -175,8 +184,11 @@ typedef struct alphabet_game{
 	screen_t scr;
 	status_t status;
 	m_evt_code_t m_evt_code;
-	p_void_ctrl_tool_t main_status;
+	p_void_ctrl_tool_t main_status;		
 	p_void_ctrl_tool_t child_status_start;
+	int level;			//game level
+	int timing_time;	//game left time
+	p_void_ctrl_tool_t child_status_help;
 	unsigned int delay_time;
 }alphabet_game_t;
 

@@ -410,16 +410,14 @@ static int ctrl_tool_response_click(p_void_data_t p_void_data, p_void_ctrl_tool_
 
 static int ctrl_tool_response_press(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code)
 {
-	mvwprintw(stdscr,1,1,"I'm %s() at %d in %s\n",__FUNCTION__,__LINE__,__FILE__);
+	//mvwprintw(stdscr,1,1,"I'm %s() at %d in %s\n",__FUNCTION__,__LINE__,__FILE__);
 	
 	return 0;
 }
 
 static int ctrl_tool_response_release(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code)
 {
-	
-	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	mvwprintw(stdscr,1,1,"I'm %s() at %d in %s\n",__FUNCTION__,__LINE__,__FILE__);
+	//mvwprintw(stdscr,1,1,"I'm %s() at %d in %s\n",__FUNCTION__,__LINE__,__FILE__);
 	
 	return 0;
 }

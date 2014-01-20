@@ -51,6 +51,7 @@ int paint_alphabet_game(alphabet_game_t *alphabet_game)
 			paint_child_status_start(ag);
 			break;
 		case CHILD_STATUS_HELP:
+			clear_screen(ag->child_status_help,&ag->scr);			
 			paint_child_status_help(ag);
 			break;
 		case CHILD_STATUS_EXIT:
@@ -80,8 +81,10 @@ static int clear_screen(p_void_ctrl_tool_t p_void_ctrl_tool,screen_t *screen)
 		set_screen_change(scr,FALSE);
 		get_left_vertex(scr,&left_vertex);
 		set_left_vertex(pvct,&left_vertex);
-		werase(scr->win);
+		//werase(scr->win);
 	}
+
+	werase(scr->win);
 	
 	return AG_SUCCESS;
 }
@@ -113,7 +116,7 @@ static int paint_main_status(alphabet_game_t *alphabet_game)
 
 static int paint_child_status_start(alphabet_game_t *alphabet_game)
 {
-	mvwprintw(stdscr,5+CHILD_STATUS_START,5+CHILD_STATUS_START,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_START);
+	//mvwprintw(stdscr,5+CHILD_STATUS_START,5+CHILD_STATUS_START,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_START);
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
 		return AG_FAILED;
@@ -128,7 +131,15 @@ static int paint_child_status_start(alphabet_game_t *alphabet_game)
 
 static int paint_child_status_help(alphabet_game_t *alphabet_game)
 {
-	mvwprintw(stdscr,5+CHILD_STATUS_HELP,5+CHILD_STATUS_HELP,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_HELP);
+	//mvwprintw(stdscr,5+CHILD_STATUS_HELP,5+CHILD_STATUS_HELP,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_HELP);
+	alphabet_game_t *ag=alphabet_game;
+	if(NULL==ag){
+		return AG_FAILED;
+	}
+	
+	draw_main_status_foreground(&ag->scr);
+	show_title(&ag->scr,GAME_NAME,sizeof(GAME_NAME)-1);
+	ctrl_tool_paint(ag,ag->child_status_help);
 
 	return AG_SUCCESS;
 }
