@@ -3,10 +3,11 @@
   */
 
 #include <stdlib.h>
+#include "ctrl_tool.h"
 #include "alphabet_game.h"
 #include "output_alphabet_game.h"
 
-static int clear_screen(screen_t *screen);
+static int clear_screen(p_void_ctrl_tool_t p_void_ctrl_tool,screen_t *screen);
 static int refresh_screen(window_t *window);
 
 static int paint_main_status(alphabet_game_t *alphabet_game);
@@ -26,7 +27,7 @@ static int update_screen_size(screen_t *screen);
 static int set_screen_change(screen_t *screen,bool screen_change);
 static bool is_screen_change(const screen_t *screen);
 static int show_box(window_t *win,int starty,int startx,int endy,int endx, int attrs);
-
+static int show_title(const screen_t *screen, const char *title, int size_title);
 static void open_colors(color_t type, int attrs);
 static void close_colors(color_t type, int attrs);
 
@@ -40,13 +41,13 @@ int paint_alphabet_game(alphabet_game_t *alphabet_game)
 		return AG_FAILED;
 	}
 
-	clear_screen(&ag->scr);
-
 	switch(ag->status){
 		case MAIN_STATUS:
+			clear_screen(ag->main_status,&ag->scr);
 			paint_main_status(ag);
 			break;
-		case CHILD_STATUS_START:
+		case CHILD_STATUS_START:			
+			clear_screen(ag->child_status_start,&ag->scr);
 			paint_child_status_start(ag);
 			break;
 		case CHILD_STATUS_HELP:
@@ -65,16 +66,20 @@ int paint_alphabet_game(alphabet_game_t *alphabet_game)
 	return AG_SUCCESS;  
 }
 
-static int clear_screen(screen_t *screen)
+static int clear_screen(p_void_ctrl_tool_t p_void_ctrl_tool,screen_t *screen)
 {
+	p_void_ctrl_tool_t pvct=p_void_ctrl_tool;
 	screen_t *scr=screen;
-	if(NULL==scr){
+	coordinate_t left_vertex;
+	if((NULL==pvct)||(NULL==scr)){
 		return AG_FAILED;
 	}
 
 	update_screen_size(scr);
 	if(TRUE==is_screen_change(scr)){
 		set_screen_change(scr,FALSE);
+		get_left_vertex(scr,&left_vertex);
+		set_left_vertex(pvct,&left_vertex);
 		werase(scr->win);
 	}
 	
@@ -100,7 +105,8 @@ static int paint_main_status(alphabet_game_t *alphabet_game)
 	}
 	
 	draw_main_status_foreground(&ag->scr);
-	ctrl_tool_paint((void *)&ag->scr,ag->main_status);
+	show_title(&ag->scr,GAME_NAME,sizeof(GAME_NAME)-1);
+	ctrl_tool_paint(ag,ag->main_status);
 	
 	return AG_SUCCESS;
 }
@@ -108,7 +114,15 @@ static int paint_main_status(alphabet_game_t *alphabet_game)
 static int paint_child_status_start(alphabet_game_t *alphabet_game)
 {
 	mvwprintw(stdscr,5+CHILD_STATUS_START,5+CHILD_STATUS_START,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_START);
-
+	alphabet_game_t *ag=alphabet_game;
+	if(NULL==ag){
+		return AG_FAILED;
+	}
+	
+	draw_main_status_foreground(&ag->scr);
+	show_title(&ag->scr,GAME_NAME,sizeof(GAME_NAME)-1);
+	ctrl_tool_paint(ag,ag->child_status_start);
+	
 	return AG_SUCCESS;
 }
 
@@ -130,6 +144,20 @@ static int paint_child_status_default(alphabet_game_t * alphabet_game)
 {
 	mvwprintw(stdscr,5+CHILD_STATUS_EXIT,5+CHILD_STATUS_EXIT,"%d-%s-default",__LINE__,__FUNCTION__);
 
+	return AG_SUCCESS;
+}
+
+int get_left_vertex(const screen_t *screen,coordinate_t *coordinate)
+{
+	const screen_t *scr=screen;
+	coordinate_t *ce=coordinate;
+	if((NULL==scr)||(NULL==coordinate)){
+		return AG_FAILED;
+	}
+
+	ce->y=((scr->foreground.top>=0)?(scr->foreground.top):(0));
+	ce->x=((scr->foreground.left>=0)?(scr->foreground.left):(0));
+	
 	return AG_SUCCESS;
 }
 
@@ -234,6 +262,25 @@ static int show_box(window_t *win,int starty,int startx,int endy,int endx, int a
 	}
 }
 
+static int show_title(const screen_t *screen, const char *title, int size_title)
+{
+	int y=1;
+	int x=1;
+	const screen_t *scr=screen;
+	const char *ttl=title;
+	if((NULL==scr)||(NULL==ttl)){
+		return AG_FAILED;
+	}
+	
+	y=scr->foreground.top+1;
+	x=scr->foreground.left+(scr->foreground.width-size_title)/2;
+
+	open_colors(COLOR_TITLE,A_BOLD);
+	mvwprintw(scr->win,y,x,"%s",ttl);
+	close_colors(COLOR_TITLE,A_BOLD);
+		
+	return AG_SUCCESS;
+}
 static void open_colors(color_t type, int attrs)
 {
 	switch(type){
@@ -245,6 +292,9 @@ static void open_colors(color_t type, int attrs)
 			break;
 		case COLOR_ICON_SELECT:
 			if(has_colors()){attron(COLOR_PAIR(COLOR_ICON_SELECT)|attrs);}
+			break;
+		case COLOR_TITLE:			
+			if(has_colors()){attron(COLOR_PAIR(COLOR_TITLE)|attrs);}
 			break;
 		default:
 			break;
@@ -264,6 +314,9 @@ static void close_colors(color_t type, int attrs)
 			break;
 		case COLOR_ICON_SELECT:
 			if(has_colors()){attroff(COLOR_PAIR(COLOR_ICON_SELECT)|attrs);}
+			break;
+		case COLOR_TITLE:
+			if(has_colors()){attroff(COLOR_PAIR(COLOR_TITLE)|attrs);}						
 			break;
 		default:
 			break;

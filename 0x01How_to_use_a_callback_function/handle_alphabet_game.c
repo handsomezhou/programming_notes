@@ -55,7 +55,13 @@ static int handle_main_status(alphabet_game_t *alphabet_game)
 
 static int handle_child_status_start(alphabet_game_t *alphabet_game)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	alphabet_game_t *ag=alphabet_game;
+	if(NULL==ag){
+		return AG_FAILED;
+	}
+
+	ctrl_tool_handle(&ag->scr,ag->main_status,&ag->m_evt_code);
 	
 	return AG_SUCCESS;
 }

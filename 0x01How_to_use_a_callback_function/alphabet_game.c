@@ -60,6 +60,89 @@ static ctrl_tool_callback_t alphabet_game_start_event={
 	alphabet_game_start_enter,
 	alphabet_game_start_exit,	
 };
+static ctrl_tool_res_t alphabet_game_start_res[ALPHABET_GAME_START_WIDGET_NUM]={
+	{{SETTING_ALPHABET_GAME_Y(1),SETTING_ALPHABET_GAME_X2(2),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_A},
+
+	{{SETTING_ALPHABET_GAME_Y(1),SETTING_ALPHABET_GAME_X2(3),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_B},
+
+	{{SETTING_ALPHABET_GAME_Y(1),SETTING_ALPHABET_GAME_X2(4),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_C},
+
+	{{SETTING_ALPHABET_GAME_Y(2),SETTING_ALPHABET_GAME_X2(2),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_D},
+
+	{{SETTING_ALPHABET_GAME_Y(2),SETTING_ALPHABET_GAME_X2(3),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_E},
+
+	{{SETTING_ALPHABET_GAME_Y(2),SETTING_ALPHABET_GAME_X2(4),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_F},
+
+
+
+	{{SETTING_ALPHABET_GAME_Y(0),SETTING_ALPHABET_GAME_X1(1),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_G},
+
+	{{SETTING_ALPHABET_GAME_Y(0),SETTING_ALPHABET_GAME_X1(2),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_H},
+
+	{{SETTING_ALPHABET_GAME_Y(0),SETTING_ALPHABET_GAME_X1(3),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_I},
+
+	{{SETTING_ALPHABET_GAME_Y(0),SETTING_ALPHABET_GAME_X1(4),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_J},
+
+	{{SETTING_ALPHABET_GAME_Y(3),SETTING_ALPHABET_GAME_X1(1),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_K},
+
+	{{SETTING_ALPHABET_GAME_Y(3),SETTING_ALPHABET_GAME_X1(2),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_L},
+
+	{{SETTING_ALPHABET_GAME_Y(3),SETTING_ALPHABET_GAME_X1(3),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_M},
+
+	{{SETTING_ALPHABET_GAME_Y(3),SETTING_ALPHABET_GAME_X1(4),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_N},
+
+
+
+	{{SETTING_ALPHABET_GAME_Y(0),SETTING_ALPHABET_GAME_X1(0),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_O},
+
+	{{SETTING_ALPHABET_GAME_Y(0),SETTING_ALPHABET_GAME_X1(5),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_P},
+
+	{{SETTING_ALPHABET_GAME_Y(1),SETTING_ALPHABET_GAME_X2(0),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_Q},
+
+	{{SETTING_ALPHABET_GAME_Y(1),SETTING_ALPHABET_GAME_X2(1),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_R},
+
+	{{SETTING_ALPHABET_GAME_Y(1),SETTING_ALPHABET_GAME_X2(5),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_S},
+	
+	{{SETTING_ALPHABET_GAME_Y(1),SETTING_ALPHABET_GAME_X2(6),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_T},
+
+	{{SETTING_ALPHABET_GAME_Y(2),SETTING_ALPHABET_GAME_X2(0),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+			COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_U},
+	
+	{{SETTING_ALPHABET_GAME_Y(2),SETTING_ALPHABET_GAME_X2(1),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_V},
+
+	{{SETTING_ALPHABET_GAME_Y(2),SETTING_ALPHABET_GAME_X2(5),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_W},
+	
+	{{SETTING_ALPHABET_GAME_Y(2),SETTING_ALPHABET_GAME_X2(6),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_X},
+
+	{{SETTING_ALPHABET_GAME_Y(3),SETTING_ALPHABET_GAME_X1(0),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_Y},
+	
+	{{SETTING_ALPHABET_GAME_Y(3),SETTING_ALPHABET_GAME_X1(5),ALPHABET_GAME_ALPHABET_HIGHT,ALPHABET_GAME_ALPHABET_WIDTH},\
+		COLOR_ICON_NORMAL,COLOR_ICON_SELECT,ALPHABET_GAME_ALPHABET_Z},	
+};
 
 static int alphabet_game_help_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag);
 static int alphabet_game_help_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
@@ -98,6 +181,7 @@ alphabet_game_t *init_alphabet_game(void)
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	alphabet_game_t *ag=NULL;
 	int ret=AG_FAILED;
+	coordinate_t left_vertex;
 
 	ag=(alphabet_game_t *)malloc(sizeof(alphabet_game_t));
 
@@ -109,7 +193,7 @@ alphabet_game_t *init_alphabet_game(void)
 	if(AG_FAILED==ret){
 		//break;
 	}
-
+	
 	set_alphabet_game_status(&ag->status,MAIN_STATUS);
 	
 	set_delay_time(&ag->delay_time,DELAY_TIME);
@@ -122,6 +206,19 @@ alphabet_game_t *init_alphabet_game(void)
 		return NULL;
 	}
 
+	ag->child_status_start=ctrl_tool_init(ALPHABET_GAME_START_WIDGET_NUM,alphabet_game_start_res,&alphabet_game_start_event);
+	if(NULL==ag->child_status_start){
+		ctrl_tool_free(ag->main_status);
+		ag->main_status=NULL;
+
+		free(ag);
+		ag=NULL;
+		
+	}
+	
+	get_left_vertex(&ag->scr,&left_vertex);
+	set_left_vertex(ag->main_status,&left_vertex);
+
 	return ag;
 }
 
@@ -133,7 +230,7 @@ void exit_alphabet_game(alphabet_game_t *alphabet_game)
 		return;
 	}
 	ctrl_tool_free(ag->main_status);
-	
+	ctrl_tool_free(ag->child_status_start);
 	exit_screen(&ag->scr);
 	
 	free(ag);
@@ -193,6 +290,7 @@ static int init_screen(screen_t *screen)
 		init_pair(COLOR_FOREGROUND,COLOR_BLUE,COLOR_BLACK);
 		init_pair(COLOR_ICON_NORMAL,COLOR_BLUE,COLOR_BLACK);
 		init_pair(COLOR_ICON_SELECT,COLOR_GREEN,COLOR_BLACK);
+		init_pair(COLOR_TITLE,COLOR_MAGENTA,COLOR_BLACK);
 		
 	}
 
@@ -245,7 +343,7 @@ static int alphabet_game_paint(p_void_data_t p_void_data, rect_t *p_rect, int in
 	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
 	screen_t *scr=&ag->scr;
 	rect_t *rct=p_rect;
-	if(NULL==scr||NULL==rct){
+	if((NULL==scr)||(NULL==rct)){
 		return AG_FAILED;
 	}
 	
@@ -343,42 +441,50 @@ static int alphabet_game_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m
 
 static int alphabet_game_start_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
+	screen_t *scr=&ag->scr;
+	rect_t *rct=p_rect;
+	if((NULL==scr)||(NULL==rct)){
+		return AG_FAILED;
+	}
 	
+	show_button(scr,rct->top,rct->left,sel_flag,alphabet_game_start_res[index].pdata,A_BOLD);
+
 	return AG_SUCCESS;
 }
 
 static int alphabet_game_start_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
 static int alphabet_game_start_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
 static int alphabet_game_start_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
 static int alphabet_game_start_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }
 
 static int alphabet_game_start_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
 	return AG_SUCCESS;
 }

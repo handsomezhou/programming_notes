@@ -8,6 +8,7 @@
 
 extern int paint_alphabet_game(alphabet_game_t *alphabet_game);
 
+extern int get_left_vertex(const screen_t *screen,coordinate_t *coordinate);
 extern int draw_main_status_foreground(const screen_t *screen);
 extern int show_button(const screen_t *scr,int offset_y,int offset_x,int sel_flag,const char *text,int attrs);
 

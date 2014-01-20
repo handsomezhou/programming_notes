@@ -3,6 +3,7 @@
   */
 #include <stdlib.h>
 #include <string.h>
+#include "data_type.h"
 #include "ctrl_tool.h"
 
 #define MAX_DATA_LEN	(256)
@@ -11,8 +12,13 @@ static int ctrl_tool_mouse_event(p_void_data_t p_void_data, p_void_ctrl_tool_t p
 static int ctrl_tool_key_event(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
 static int ctrl_tool_prev_focus(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
 static int ctrl_tool_next_focus(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
+static int ctrl_tool_response_click(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
+static int ctrl_tool_response_press(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
+static int ctrl_tool_response_release(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
 static int ctrl_tool_response_focus(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
 static int ctrl_tool_response_exit(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
+static coordinate_t *get_coordinate(coordinate_t *coordinate,const m_evt_mouse_t *mevnet);
+static bool point_in_rect(const coordinate_t *left_vertex,const rect_t *rect,const coordinate_t *coordinate);
 
 
 typedef struct ctrl_tool_resource{
@@ -21,6 +27,7 @@ typedef struct ctrl_tool_resource{
 }ctrl_tool_resource_t,*p_ctrl_tool_resource_t;
 
 typedef struct ctrl_tool{
+	coordinate_t left_vertex;//left vertex of Display Interface 
 	bool loop_mode;
 	int total_item;
 	int cur_item;
@@ -41,6 +48,8 @@ p_void_ctrl_tool_t ctrl_tool_init(int res_num, const ctrl_tool_res_t *p_res, con
 		return NULL;
 	}
 	memset(p_ctrl_tool,0,sizeof(ctrl_tool_t));
+	p_ctrl_tool->left_vertex.x=0;
+	p_ctrl_tool->left_vertex.y=0;
 	p_ctrl_tool->loop_mode=TRUE;
 	p_ctrl_tool->total_item=res_num;
 	p_ctrl_tool->cur_item=0;
@@ -137,7 +146,7 @@ int ctrl_tool_paint(const p_void_data_t p_void_data, const p_void_ctrl_tool_t p_
 	}
 
 	for(i=0; i<p_ctrl_tool->total_item; i++){
-		if(TRUE!=p_ctrl_tool->p_ctrl_tool_resource[i].visible)
+		if(FALSE==p_ctrl_tool->p_ctrl_tool_resource[i].visible)
 			continue;
 
 		if(NULL!=p_ctrl_tool->p_ctrl_tool_callback->pf_event_paint){
@@ -214,6 +223,19 @@ bool ctrl_tool_set_visible(p_void_ctrl_tool_t p_void_ctrl_tool, int item, bool v
 	return TRUE;
 }
 
+int set_left_vertex(p_void_ctrl_tool_t p_void_ctrl_tool,const coordinate_t *coordinate)
+{
+	ctrl_tool_t *ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;
+	const coordinate_t *ce=coordinate;
+	if((NULL==ctrl_tool)||(NULL==ce)){
+		return CTRL_TOOL_FAILED;
+	}
+	ctrl_tool->left_vertex.x=((ce->x>=0)?(ce->x):(0));
+	ctrl_tool->left_vertex.y=((ce->y>=0)?(ce->y):(0));
+	
+	return CTRL_TOOL_SUCCESS;
+}
+
 static int ctrl_tool_mouse_event(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool,const m_evt_code_t *p_m_evt_code)
 {
 	int cur_item=-1;
@@ -235,11 +257,13 @@ static int ctrl_tool_mouse_event(p_void_data_t p_void_data, p_void_ctrl_tool_t p
 		case MOUSE_WHEEL_CLICK:	//exit
 			cur_item=ctrl_tool_response_exit(pvd,ctrl_tool,m_evt_code);
 			break;		
-		case MOUSE_LEFT_DOWN:	
-		case MOUSE_WHEEL_DOWN:	
+		case MOUSE_LEFT_DOWN:
+		case MOUSE_WHEEL_DOWN:
+			ctrl_tool_response_press(pvd,ctrl_tool,m_evt_code);
 			break;
 		case MOUSE_LEFT_UP:
 		case MOUSE_WHEEL_UP:
+			ctrl_tool_response_release(pvd,ctrl_tool,m_evt_code);
 			break;
 		case MOUSE_LEFT_CLICK:
 			cur_item=ctrl_tool_response_focus(pvd,ctrl_tool,m_evt_code);
@@ -308,12 +332,12 @@ static int ctrl_tool_prev_focus(p_void_data_t p_void_data, p_void_ctrl_tool_t p_
 		
 		ctrl_tool->cur_item=(ctrl_tool->cur_item>0)?(ctrl_tool->cur_item-1):(ctrl_tool->total_item-1);
 		cur_item=ctrl_tool->cur_item;
-		if(TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible){
+		if(FALSE!=ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible){
 			break;
 		}
 	}
 
-	if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_select)){
+	if((FALSE!=ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_select)){
 		ctrl_tool->p_ctrl_tool_callback->pf_event_select(pvd,m_evt_code,ctrl_tool->cur_item);
 	}
 			
@@ -340,16 +364,64 @@ static int ctrl_tool_next_focus(p_void_data_t p_void_data, p_void_ctrl_tool_t p_
 
 		ctrl_tool->cur_item=(ctrl_tool->cur_item<ctrl_tool->total_item-1)?(ctrl_tool->cur_item+1):(0);
 		cur_item=ctrl_tool->cur_item;
-		if(TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible){
+		if(FALSE!=ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible){
 			break;
 		}				
 	}
 		
-	if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_select)){
+	if((FALSE!=ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_select)){
 		ctrl_tool->p_ctrl_tool_callback->pf_event_select(pvd,m_evt_code,ctrl_tool->cur_item);
 	}	
 
 	return cur_item;
+}
+static int ctrl_tool_response_click(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code)
+{
+	int i=0;
+	int cur_item=-1;
+	coordinate_t coordinate;
+	p_void_data_t pvd=p_void_data;
+	ctrl_tool_t *ctrl_tool=(ctrl_tool_t *)p_void_ctrl_tool;
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	if((NULL==pvd)||(NULL==ctrl_tool)||(NULL==m_evt_code)){
+		return cur_item;
+	}
+
+	if(NULL==get_coordinate(&coordinate,&m_evt_code->m_evt_param.mouse_t.mouse)){
+		return cur_item;
+	}
+	
+	for(i=0; i<ctrl_tool->total_item; i++){
+		if(FALSE==ctrl_tool->p_ctrl_tool_resource[i].visible){
+			continue;
+		}
+	
+		if(FALSE!=point_in_rect(&ctrl_tool->left_vertex,&ctrl_tool->p_ctrl_tool_resource[i].ctrl_tool_res.rect,&coordinate)){
+			ctrl_tool->cur_item=i;
+			if((FALSE!=ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_pen_down)){
+				ctrl_tool->p_ctrl_tool_callback->pf_event_pen_down(pvd,m_evt_code,ctrl_tool->cur_item);
+				cur_item=ctrl_tool->cur_item;
+			}
+		}
+	}
+	
+	return cur_item;
+}
+
+static int ctrl_tool_response_press(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code)
+{
+	mvwprintw(stdscr,1,1,"I'm %s() at %d in %s\n",__FUNCTION__,__LINE__,__FILE__);
+	
+	return 0;
+}
+
+static int ctrl_tool_response_release(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code)
+{
+	
+	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
+	mvwprintw(stdscr,1,1,"I'm %s() at %d in %s\n",__FUNCTION__,__LINE__,__FILE__);
+	
+	return 0;
 }
 
 static int ctrl_tool_response_focus(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code)
@@ -363,10 +435,7 @@ static int ctrl_tool_response_focus(p_void_data_t p_void_data, p_void_ctrl_tool_
 	}
 	switch(m_evt_code->m_evt_type){
 		case M_EVT_MOUSE:
-			if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_pen_down)){
-				ctrl_tool->p_ctrl_tool_callback->pf_event_pen_down(pvd,m_evt_code,ctrl_tool->cur_item);
-				cur_item=ctrl_tool->cur_item;
-			}
+			cur_item=ctrl_tool_response_click(pvd,ctrl_tool,m_evt_code);
 			break;
 		case M_EVT_KEY:
 			if((TRUE==ctrl_tool->p_ctrl_tool_resource[ctrl_tool->cur_item].visible)&&(NULL!=ctrl_tool->p_ctrl_tool_callback->pf_event_enter)){
@@ -398,4 +467,38 @@ static int ctrl_tool_response_exit(p_void_data_t p_void_data, p_void_ctrl_tool_t
 	cur_item=ctrl_tool->cur_item;
 	
 	return cur_item;
+}
+
+static coordinate_t *get_coordinate(coordinate_t *coordinate,const m_evt_mouse_t *mevnet)
+{
+	coordinate_t *ce=coordinate;
+	const m_evt_mouse_t *evt=mevnet;
+	if(NULL==ce||NULL==evt){
+		return ce;
+	}
+	ce->y=(T_S16)evt->y;
+	ce->x=(T_S16)evt->x;
+	
+	return ce;
+}
+
+static bool point_in_rect(const coordinate_t *left_vertex,const rect_t *rect,const coordinate_t *coordinate)
+{
+	bool ret=FALSE;
+	rect_t rect_btn;
+	const coordinate_t *lv=left_vertex;
+	const rect_t *rct=rect;
+	const coordinate_t *ce=coordinate;
+	if((NULL==lv)||(NULL==rct)||(NULL==ce)){
+		return FALSE;
+	}
+	
+	rect_btn.top=lv->y+rct->top;
+	rect_btn.left=lv->x+rct->left;
+	rect_btn.height=rct->height;
+	rect_btn.width=rct->width;
+	
+	ret=coordinate_in_rect(&rect_btn,ce);
+	
+	return ret;
 }

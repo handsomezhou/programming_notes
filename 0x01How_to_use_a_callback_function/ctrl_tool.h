@@ -27,6 +27,7 @@ extern "C" {
 
 typedef void *p_void_ctrl_tool_t;
 typedef void *p_void_data_t;	//pass data point that call the control tool
+typedef void *p_void_screen_t;	//
 
 typedef struct ctrl_tool_res{
 	rect_t rect;	//show location
@@ -42,6 +43,7 @@ typedef struct ctrl_tool_callback{
 	int (* pf_event_select)(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 	int (* pf_event_enter)(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 	int (* pf_event_exit)(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+	
 }ctrl_tool_callback_t;
 
 extern p_void_ctrl_tool_t ctrl_tool_init(int res_num, const ctrl_tool_res_t *p_res, const ctrl_tool_callback_t *p_callback_fun);
@@ -50,6 +52,7 @@ extern int ctrl_tool_paint(const p_void_data_t p_void_data, const p_void_ctrl_to
 extern void ctrl_tool_free(p_void_ctrl_tool_t p_void_ctrl_tool);
 extern bool ctrl_tool_set_loop_mode(p_void_ctrl_tool_t p_void_ctrl_tool, bool loop_mode);
 extern bool ctrl_tool_set_visible(p_void_ctrl_tool_t p_void_ctrl_tool, int item, bool visible);
+extern int set_left_vertex(p_void_ctrl_tool_t p_void_ctrl_tool,const coordinate_t *coordinate); 
 #ifdef __cplusplus
 }
 #endif	/*__cplusplus*/
