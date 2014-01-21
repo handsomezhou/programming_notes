@@ -20,6 +20,7 @@
 #define DELAY_TIME_MIN	 50000//us
 #define DELAY_TIME		250000//us
 
+#define MAX_DATA_LEN_PER_LINE	(128)
 
 
 
@@ -126,6 +127,10 @@
 #define ALPHABET_GAME_HELP_BACK_X		(((ALPHABET_GAME_FOREGROUND_WIDTH-sizeof(ALPHABET_GAME_HELP_BACK))/2))
 #define ALPHABET_GAME_HELP_BACK_HEIGHT	(1)
 #define ALPHABET_GAME_HELP_BACK_WIDTH	(sizeof(ALPHABET_GAME_HELP_BACK)-1)
+
+#define ALPHABET_GAME_HELP_SELECT_RIGHT	"right"
+#define ALPHABET_GAME_HELP_SELECT_WRONG "wrong"
+
 //<==========================help============================
 
 //===========================exit===========================>
@@ -138,6 +143,7 @@ typedef enum{
 	CHILD_STATUS_START,		//Status that enter the event of start's button
 	CHILD_STATUS_HELP,		//Status that enter the event of help's button	
 	CHILD_STATUS_EXIT,	 	//Status that enter the event of exit's button
+	OTHER_STATUS,			//Status that before enter any event.
 }status_t;
 
 typedef enum{
@@ -171,6 +177,12 @@ typedef enum color{
 	COLOR_ICON_SELECT,
 	//title
 	COLOR_TITLE,
+	//text content
+	COLOR_TEXT_CONTENT,
+	//warning
+	COLOR_MSG_WARNING,
+	//error message
+	COLOR_MSG_ERROR,
 }color_t;
 typedef WINDOW window_t;
 typedef struct screen{
@@ -183,6 +195,7 @@ typedef struct screen{
 typedef struct alphabet_game{
 	screen_t scr;
 	status_t status;
+	status_t last_status;//save last status
 	m_evt_code_t m_evt_code;
 	p_void_ctrl_tool_t main_status;		
 	p_void_ctrl_tool_t child_status_start;

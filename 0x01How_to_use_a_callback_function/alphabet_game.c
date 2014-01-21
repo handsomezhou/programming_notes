@@ -24,6 +24,8 @@ static int alphabet_game_select(p_void_data_t p_void_data, const m_evt_code_t *p
 static int alphabet_game_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 static int alphabet_game_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 
+static int alphabet_game_response_focus(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+
 static ctrl_tool_callback_t alphabet_game_event={
 	alphabet_game_paint,
 	alphabet_game_pen_up,
@@ -51,6 +53,9 @@ static int alphabet_game_start_pen_down(p_void_data_t p_void_data, const m_evt_c
 static int alphabet_game_start_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 static int alphabet_game_start_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
 static int alphabet_game_start_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+
+static int alphabet_game_start_response_focus(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
+
 
 static ctrl_tool_callback_t alphabet_game_start_event={
 	alphabet_game_start_paint,
@@ -165,29 +170,12 @@ static ctrl_tool_callback_t alphabet_game_help_event={
 	alphabet_game_help_exit,	
 };
 
-static int alphabet_game_exit_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag);
-static int alphabet_game_exit_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_exit_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_exit_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_exit_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
-static int alphabet_game_exit_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index);
-
-static ctrl_tool_callback_t alphabet_game_exit_event={
-	alphabet_game_exit_paint,
-	alphabet_game_exit_pen_up,
-	alphabet_game_exit_pen_down,
-	alphabet_game_exit_select,
-	alphabet_game_exit_enter,
-	alphabet_game_exit_exit,	
-};
-
 alphabet_game_t *init_alphabet_game(void)
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	alphabet_game_t *ag=NULL;
 	int ret=AG_FAILED;
-	coordinate_t left_vertex;
-
+	
 	ag=(alphabet_game_t *)malloc(sizeof(alphabet_game_t));
 
 	if(NULL==ag){
@@ -196,10 +184,14 @@ alphabet_game_t *init_alphabet_game(void)
 	
 	ret=init_screen(&ag->scr);
 	if(AG_FAILED==ret){
-		//break;
+		free(ag);
+		ag=NULL;
+
+		return NULL;
 	}
 	
 	set_alphabet_game_status(&ag->status,MAIN_STATUS);
+	set_alphabet_game_status(&ag->last_status,OTHER_STATUS);
 	
 	set_delay_time(&ag->delay_time,DELAY_TIME);
 
@@ -233,9 +225,6 @@ alphabet_game_t *init_alphabet_game(void)
 		ag=NULL;
 	}
 	
-	get_left_vertex(&ag->scr,&left_vertex);
-	set_left_vertex(ag->main_status,&left_vertex);
-
 	return ag;
 }
 
@@ -310,7 +299,9 @@ static int init_screen(screen_t *screen)
 		init_pair(COLOR_ICON_NORMAL,COLOR_BLUE,COLOR_BLACK);
 		init_pair(COLOR_ICON_SELECT,COLOR_GREEN,COLOR_BLACK);
 		init_pair(COLOR_TITLE,COLOR_MAGENTA,COLOR_BLACK);
-		
+		init_pair(COLOR_TEXT_CONTENT,COLOR_YELLOW,COLOR_BLACK);
+		init_pair(COLOR_MSG_WARNING,COLOR_YELLOW,COLOR_BLACK);
+		init_pair(COLOR_MSG_ERROR,COLOR_RED,COLOR_BLACK);		
 	}
 
 	scr->win=stdscr;
@@ -366,7 +357,7 @@ static int alphabet_game_paint(p_void_data_t p_void_data, rect_t *p_rect, int in
 		return AG_FAILED;
 	}
 	
-//	draw_main_status_foreground(scr);
+	show_foreground(scr);
 	show_button(scr,rct->top,rct->left,sel_flag,alphabet_game_res[index].pdata,A_BOLD);
 
 	return AG_SUCCESS;
@@ -381,30 +372,7 @@ static int alphabet_game_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p
 
 static int alphabet_game_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	int index=sel_index;
-	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
-	const m_evt_code_t *m_evt_code=p_m_evt_code;
-	if((NULL==ag)||(NULL==m_evt_code)){
-		return AG_FAILED;
-	}
-
-	switch(index){
-		case MAIN_STATUS_START:
-			ag->status=CHILD_STATUS_START;
-			break;
-		case MAIN_STATUS_HELP:
-			ag->status=CHILD_STATUS_HELP;
-			break;
-		case MAIN_STATUS_EXIT:
-			ag->status=CHILD_STATUS_EXIT;
-			break;
-		default:
-			break;
-	}
-	
-
-	return AG_SUCCESS;
+	return alphabet_game_response_focus(p_void_data,p_m_evt_code,sel_index);
 }
 
 static int alphabet_game_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -416,29 +384,7 @@ static int alphabet_game_select(p_void_data_t p_void_data, const m_evt_code_t *p
 
 static int alphabet_game_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	int index=sel_index;
-	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
-	const m_evt_code_t *m_evt_code=p_m_evt_code;
-	if((NULL==ag)||(NULL==m_evt_code)){
-		return AG_FAILED;
-	}
-
-	switch(index){
-		case MAIN_STATUS_START:
-			ag->status=CHILD_STATUS_START;
-			break;
-		case MAIN_STATUS_HELP:
-			ag->status=CHILD_STATUS_HELP;
-			break;
-		case MAIN_STATUS_EXIT:
-			ag->status=CHILD_STATUS_EXIT;
-			break;
-		default:
-			break;
-	}
-	
-	return AG_SUCCESS;
+	return alphabet_game_response_focus(p_void_data,p_m_evt_code,sel_index);
 }
 
 static int alphabet_game_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -455,7 +401,31 @@ static int alphabet_game_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m
 	return AG_SUCCESS;
 }
 
+static int alphabet_game_response_focus(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
+{
+	int index=sel_index;
+	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	if((NULL==ag)||(NULL==m_evt_code)){
+		return AG_FAILED;
+	}
 
+	switch(index){
+		case MAIN_STATUS_START:
+			ag->status=CHILD_STATUS_START;
+			break;
+		case MAIN_STATUS_HELP:
+			ag->status=CHILD_STATUS_HELP;
+			break;
+		case MAIN_STATUS_EXIT:
+			ag->status=CHILD_STATUS_EXIT;
+			break;
+		default:
+			break;
+	}
+	
+	return AG_SUCCESS;
+}
 
 
 static int alphabet_game_start_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag)
@@ -482,9 +452,7 @@ static int alphabet_game_start_pen_up(p_void_data_t p_void_data, const m_evt_cod
 
 static int alphabet_game_start_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
+	return alphabet_game_start_response_focus(p_void_data,p_m_evt_code,sel_index);
 }
 
 static int alphabet_game_start_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -496,9 +464,7 @@ static int alphabet_game_start_select(p_void_data_t p_void_data, const m_evt_cod
 
 static int alphabet_game_start_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
-	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
+	return alphabet_game_start_response_focus(p_void_data,p_m_evt_code,sel_index);
 }
 
 static int alphabet_game_start_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -515,7 +481,23 @@ static int alphabet_game_start_exit(p_void_data_t p_void_data, const m_evt_code_
 	return AG_SUCCESS;
 }
 
+static int alphabet_game_start_response_focus(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
+{
+	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
+	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	if((NULL==ag)||(NULL==m_evt_code)){
+		return AG_FAILED;
+	}
 
+	if(sel_index<=ALPHABET_GAME_ALPHABET_Z-ALPHABET_GAME_ALPHABET_A+13){
+		ctrl_tool_set_visible(ag->child_status_start,sel_index,FALSE);
+		show_prompt(&ag->scr,ALPHABET_GAME_HELP_SELECT_WRONG,strlen(ALPHABET_GAME_HELP_SELECT_WRONG),COLOR_MSG_WARNING);
+	}else{
+		show_prompt(&ag->scr,ALPHABET_GAME_HELP_SELECT_RIGHT,strlen(ALPHABET_GAME_HELP_SELECT_RIGHT),COLOR_MSG_WARNING);
+	}
+		
+	return AG_SUCCESS;
+}
 
 static int alphabet_game_help_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag)
 {
@@ -602,45 +584,3 @@ static int alphabet_game_help_exit(p_void_data_t p_void_data, const m_evt_code_t
 	return AG_SUCCESS;
 }
 
-
-static int alphabet_game_exit_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag)
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-static int alphabet_game_exit_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)	
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-static int alphabet_game_exit_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)	
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-static int alphabet_game_exit_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-static int alphabet_game_exit_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}
-
-static int alphabet_game_exit_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
-{
-	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	
-	return AG_SUCCESS;
-}

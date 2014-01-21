@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "data_type.h"
+#include "graphic.h"
 #include "ctrl_tool.h"
 
 #define MAX_DATA_LEN	(256)
