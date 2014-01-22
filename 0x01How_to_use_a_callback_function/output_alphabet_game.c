@@ -8,9 +8,6 @@
 #include "alphabet_game.h"
 #include "output_alphabet_game.h"
 
-static int clear_screen(p_void_ctrl_tool_t p_void_ctrl_tool,screen_t *screen, status_t *last_status, const status_t *status);
-static int refresh_screen(window_t *window);
-
 static int paint_main_status(alphabet_game_t *alphabet_game);
 static int paint_child_status_start(alphabet_game_t *alphabet_game);
 static int paint_child_status_help(alphabet_game_t *alphabet_game);
@@ -35,18 +32,16 @@ int paint_alphabet_game(alphabet_game_t *alphabet_game)
  	if(NULL==ag){
 		return AG_FAILED;
 	}
-
+			
+	clear_screen(ag);
 	switch(ag->status){
 		case MAIN_STATUS:
-			clear_screen(ag->main_status,&ag->scr,&ag->last_status,&ag->status);
 			paint_main_status(ag);
 			break;
 		case CHILD_STATUS_START:			
-			clear_screen(ag->child_status_start,&ag->scr,&ag->last_status,&ag->status);
 			paint_child_status_start(ag);
 			break;
-		case CHILD_STATUS_HELP:
-			clear_screen(ag->child_status_help,&ag->scr,&ag->last_status,&ag->status);			
+		case CHILD_STATUS_HELP:	
 			paint_child_status_help(ag);
 			break;
 		case CHILD_STATUS_EXIT:
@@ -62,22 +57,38 @@ int paint_alphabet_game(alphabet_game_t *alphabet_game)
 	return AG_SUCCESS;  
 }
 
-static int clear_screen(p_void_ctrl_tool_t p_void_ctrl_tool, screen_t *screen, status_t *last_status, const status_t *status)
+int clear_screen(alphabet_game_t *alphabet_game)
 {
-	p_void_ctrl_tool_t pvct=p_void_ctrl_tool;
-	screen_t *scr=screen;
-	status_t *lst_stts=last_status;
-	const status_t *stts=status;
-	coordinate_t left_vertex;
-	bool force_update=FALSE;
-	if((NULL==pvct)||(NULL==scr)||(NULL==lst_stts)||(NULL==stts)){
+	alphabet_game_t *ag=alphabet_game;
+	if(NULL==ag){		
 		return AG_FAILED;
 	}
-	if((*lst_stts)!=(*stts)){
-		force_update=TRUE;
-		set_alphabet_game_status(lst_stts,*stts);
+	p_void_ctrl_tool_t pvct=NULL;
+	bool force_update=FALSE;
+	screen_t *scr=&ag->scr;
+	coordinate_t left_vertex;
+
+	//get address of p_void_ctrl_t
+	switch(ag->status){
+		case MAIN_STATUS:
+			pvct=ag->main_status;
+			break;
+		case CHILD_STATUS_START:
+			pvct=ag->child_status_start;
+			break;
+		case CHILD_STATUS_HELP:
+			pvct=ag->child_status_help;
+			break;
+		default:
+			pvct=NULL;
+			break;
 	}
 	
+	if((get_last_status(ag)!=get_cur_status(ag))||(is_enter_next_level(ag)==TRUE)){
+		force_update=TRUE;
+		set_last_status(ag,get_cur_status(ag));
+	}
+
 	update_screen_change(scr,force_update);
 	if(TRUE==is_screen_change(scr)){
 		set_screen_change(scr,FALSE);
@@ -90,8 +101,10 @@ static int clear_screen(p_void_ctrl_tool_t p_void_ctrl_tool, screen_t *screen, s
 	
 	return AG_SUCCESS;
 }
+	
 
-static int refresh_screen(window_t *window)
+
+int refresh_screen(window_t *window)
 {
 	window_t *win=window;
 	if(NULL==win){
@@ -199,7 +212,7 @@ int show_prompt(const screen_t *screen, const char *prompt, int size_prompt, col
 		return AG_FAILED;
 	}
 	
-	y=scr->foreground.top+scr->foreground.height-1;
+	y=scr->foreground.top+scr->foreground.height-2;
 	x=scr->foreground.left+(scr->foreground.width-size_prompt)/2;
 
 	open_colors(color,A_BOLD);
@@ -356,6 +369,9 @@ static void open_colors(color_t type, int attrs)
 			break;
 		case COLOR_MSG_ERROR:
 			if(has_colors()){attron(COLOR_PAIR(COLOR_MSG_ERROR)|attrs);}
+			break;		
+		case COLOR_MSG_RIGHT:
+			if(has_colors()){attron(COLOR_PAIR(COLOR_MSG_RIGHT)|attrs);}
 			break;
 		default:
 			break;
@@ -387,6 +403,9 @@ static void close_colors(color_t type, int attrs)
 			break;
 		case COLOR_MSG_ERROR:
 			if(has_colors()){attroff(COLOR_PAIR(COLOR_MSG_ERROR)|attrs);}						
+			break;		
+		case COLOR_MSG_RIGHT:
+			if(has_colors()){attroff(COLOR_PAIR(COLOR_MSG_RIGHT)|attrs);}						
 			break;
 		default:
 			break;
