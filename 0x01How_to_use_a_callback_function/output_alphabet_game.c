@@ -26,7 +26,9 @@ static int update_screen_change(screen_t *screen, bool force_update);
 static int set_screen_change(screen_t *screen,bool screen_change);
 static bool is_screen_change(const screen_t *screen);
 static int show_box(window_t *win,int starty,int startx,int endy,int endx, int attrs);
-static int show_title(const screen_t *screen, const char *title, int size_title);
+static int show_title(const screen_t *screen, const char *propmt, int size_propmt);
+static int show_level(const screen_t *screen, const char *propmt, int size_propmt, int level);
+static int show_time(const screen_t *screen, const char *prompt, int size_propmt, int time);
 static int show_help_content(const screen_t *screen);
 static int show_exit_content(const screen_t *screen);
 static void open_colors(color_t type, int attrs);
@@ -261,6 +263,8 @@ static int paint_child_status_start(alphabet_game_t *alphabet_game)
 	
 	show_foreground(&ag->scr);
 	show_title(&ag->scr,GAME_NAME,strlen(GAME_NAME));
+	show_level(&ag->scr,ALPHABET_GAME_START_LEVEL,strlen(ALPHABET_GAME_START_LEVEL),get_cur_level(ag)+1);
+	show_time(&ag->scr,ALPHABET_GAME_START_TIME,strlen(ALPHABET_GAME_START_LEVEL),get_remain_time(ag));
 	ctrl_tool_paint(ag,ag->child_status_start);
 	
 	return AG_SUCCESS;
@@ -416,24 +420,66 @@ static int show_box(window_t *win,int starty,int startx,int endy,int endx, int a
 	}
 }
 
-static int show_title(const screen_t *screen, const char *title, int size_title)
+static int show_title(const screen_t *screen, const char *propmt, int size_propmt)
 {
 	int y=1;
 	int x=1;
 	const screen_t *scr=screen;
-	const char *ttl=title;
-	if((NULL==scr)||(NULL==ttl)){
+	const char *ppt=propmt;
+	if((NULL==scr)||(NULL==ppt)){
 		return AG_FAILED;
 	}
 	
 	y=scr->foreground.top+1;
-	x=scr->foreground.left+(scr->foreground.width-size_title)/2;
+	x=scr->foreground.left+(scr->foreground.width-size_propmt)/2;
 
 	open_colors(COLOR_TITLE,A_BOLD);
-	mvwprintw(scr->win,y,x,"%s",ttl);
+	mvwprintw(scr->win,y,x,"%s",ppt);
 	close_colors(COLOR_TITLE,A_BOLD);
 		
 	return AG_SUCCESS;
+}
+
+static int show_level(const screen_t *screen, const char *propmt, int size_propmt, int level)
+{
+	int y=1;
+	int x=1;
+	int lvl=level;
+	const screen_t *scr=screen;
+	const char *ppt=propmt;
+	if((NULL==scr)||(NULL==ppt)){
+		return AG_FAILED;
+	}
+	
+	y=scr->foreground.top+3;
+	x=scr->foreground.left+(scr->foreground.width-size_propmt)/4;
+
+	open_colors(COLOR_TITLE,A_BOLD);
+	mvwprintw(scr->win,y,x,"%s %d",ppt,lvl);
+	close_colors(COLOR_TITLE,A_BOLD);
+		
+	return AG_SUCCESS;
+}
+
+static int show_time(const screen_t *screen, const char *prompt, int size_propmt, int time)
+{
+	int y=1;
+	int x=1;
+	int tim=time;
+	const screen_t *scr=screen;
+	const char *ppt=prompt;
+	if((NULL==scr)||(NULL==ppt)){
+		return AG_FAILED;
+	}
+	
+	y=scr->foreground.top+3;
+	x=scr->foreground.left+(scr->foreground.width-size_propmt)/4*3;
+
+	open_colors(COLOR_TITLE,A_BOLD);
+	mvwprintw(scr->win,y,x,"%s %d",ppt,tim);
+	close_colors(COLOR_TITLE,A_BOLD);
+		
+	return AG_SUCCESS;	
 }
 
 static int show_help_content(const screen_t *screen)

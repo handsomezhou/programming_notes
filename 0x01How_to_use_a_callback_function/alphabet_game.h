@@ -106,7 +106,7 @@
 #define ALPHABET_GAME_ALPHABET_G	"G"
 #define ALPHABET_GAME_ALPHABET_H	"H"
 #define ALPHABET_GAME_ALPHABET_I	"I"
-#define ALPHABET_GAME_ALPHABET_J	"G"
+#define ALPHABET_GAME_ALPHABET_J	"J"
 #define ALPHABET_GAME_ALPHABET_K	"K"
 #define ALPHABET_GAME_ALPHABET_L	"L"
 #define ALPHABET_GAME_ALPHABET_M	"M"
@@ -124,6 +124,9 @@
 #define ALPHABET_GAME_ALPHABET_X	"X"
 #define ALPHABET_GAME_ALPHABET_Y	"Y"
 #define ALPHABET_GAME_ALPHABET_Z	"Z"
+
+#define ALPHABET_GAME_START_LEVEL	"level:"
+#define ALPHABET_GAME_START_TIME	"time:"
 //<===========================start===========================
 
 //===========================help===========================>
@@ -214,6 +217,7 @@ typedef struct alphabet_game{
 	m_evt_code_t m_evt_code;
 	p_void_ctrl_tool_t main_status;		
 	p_void_ctrl_tool_t child_status_start;
+	int alphabet_id[ALPHABET_GAME_START_WIDGET_NUM];
 	int level;			//game level
 	int remain_time;	//game remain_time
 	int total_alphabet_num;	//total alphabet number per level

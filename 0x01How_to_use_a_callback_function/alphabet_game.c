@@ -8,6 +8,7 @@
 #include "message_event.h"
 #include "ctrl_tool.h"
 #include "alphabet_game.h"
+#include "handle_alphabet_game.h"
 #include "output_alphabet_game.h"
 
 
@@ -193,7 +194,8 @@ alphabet_game_t *init_alphabet_game(void)
 	set_remain_time(ag,ALPHABET_GAME_START_TIME_ONE);
 	set_total_alphabet_num(ag,ALPHABET_GAME_START_LEVEL_ONE_ALPHABET_NUM);
 	set_remain_alphabet_num(ag,get_total_alphabet_num(ag));
-	set_enter_next_level(ag,TRUE);
+	//set_enter_next_level(ag,TRUE);
+	set_enter_next_level(ag,FALSE);
 	set_delay_time(ag,DELAY_TIME);
 	
 	ret=init_screen(&ag->scr);
@@ -234,6 +236,8 @@ alphabet_game_t *init_alphabet_game(void)
 		ag=NULL;
 	}
 
+	produce_random_alphabet_sequence(ag,get_total_alphabet_num(ag));//init alphabet_sequence
+	
 	return ag;
 }
 
@@ -684,6 +688,7 @@ static int alphabet_game_response_focus(p_void_data_t p_void_data, const m_evt_c
 	switch(index){
 		case MAIN_STATUS_START:
 			set_cur_status(ag,CHILD_STATUS_START);
+			produce_random_alphabet_sequence(ag,get_total_alphabet_num(ag));
 			break;
 		case MAIN_STATUS_HELP:
 			set_cur_status(ag,CHILD_STATUS_HELP);
@@ -709,7 +714,7 @@ static int alphabet_game_start_paint(p_void_data_t p_void_data, rect_t *p_rect,i
 		return AG_FAILED;
 	}
 	
-	show_button(scr,rct->top,rct->left,sel_flag,alphabet_game_start_res[index].pdata,A_BOLD);
+	show_button(scr,rct->top,rct->left,sel_flag,alphabet_game_start_res[ag->alphabet_id[index]].pdata,A_BOLD);
 
 	return AG_SUCCESS;
 }
@@ -757,22 +762,18 @@ static int alphabet_game_start_response_focus(p_void_data_t p_void_data, const m
 	const unsigned int usec=DELAY_TIME_MAX;
 	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
 	const m_evt_code_t *m_evt_code=p_m_evt_code;
+	int sel_ndx=sel_index;
 	if((NULL==ag)||(NULL==m_evt_code)){
 		return AG_FAILED;
 	}
 
-	if(sel_index<=ALPHABET_GAME_ALPHABET_Z-ALPHABET_GAME_ALPHABET_A+2){
-		ctrl_tool_set_visible(ag->child_status_start,sel_index,FALSE);
-		dec_remain_alphabet_num(ag);
+	if(FALSE==judge_cur_sort_foremost_alphabet(ag,ag->alphabet_id[sel_ndx],sel_ndx)){
 		show_prompt(&ag->scr,ALPHABET_GAME_HELP_SELECT_WRONG,strlen(ALPHABET_GAME_HELP_SELECT_WRONG),COLOR_MSG_ERROR);
 		refresh_screen(ag->scr.win);
-		//sleep_delay_time(get_delay_time(ag));
 		sleep_delay_time(usec);
 	}else{
-		show_prompt(&ag->scr,ALPHABET_GAME_HELP_SELECT_RIGHT,strlen(ALPHABET_GAME_HELP_SELECT_RIGHT),COLOR_MSG_RIGHT);
-		refresh_screen(ag->scr.win);		
-		//sleep_delay_time(get_delay_time(ag));
-		sleep_delay_time(usec);
+		ctrl_tool_set_visible(ag->child_status_start,sel_index,FALSE);
+		dec_remain_alphabet_num(ag);
 	}
 
 	if(0>=get_remain_alphabet_num(ag)){//enter next level
@@ -795,10 +796,11 @@ static int alphabet_game_start_response_focus(p_void_data_t p_void_data, const m
 				set_remain_time(ag,ALPHABET_GAME_START_TIME_ONE);
 				set_total_alphabet_num(ag,ALPHABET_GAME_START_LEVEL_ONE_ALPHABET_NUM);
 				set_remain_alphabet_num(ag,get_total_alphabet_num(ag));	
-
+				
 				set_cur_status(ag,MAIN_STATUS);
 				break;
 			default:
+				set_cur_status(ag,MAIN_STATUS);
 				break;
 		}
 	}
