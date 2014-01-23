@@ -256,6 +256,8 @@ static int ctrl_tool_mouse_event(p_void_data_t p_void_data, p_void_ctrl_tool_t p
 			cur_item=ctrl_tool_next_focus(pvd,ctrl_tool,m_evt_code);
 			break;
 		case MOUSE_WHEEL_CLICK:	//exit
+		case MOUSE_WHEEL_DOUBLE_CLICK:
+		case MOUSE_WHEEL_TRIPLE_CLICK:
 			cur_item=ctrl_tool_response_exit(pvd,ctrl_tool,m_evt_code);
 			break;		
 		case MOUSE_LEFT_DOWN:
@@ -267,6 +269,8 @@ static int ctrl_tool_mouse_event(p_void_data_t p_void_data, p_void_ctrl_tool_t p
 			ctrl_tool_response_release(pvd,ctrl_tool,m_evt_code);
 			break;
 		case MOUSE_LEFT_CLICK:
+		case MOUSE_LEFT_DOUBLE_CLICK:
+		case MOUSE_LEFT_TRIPLE_CLICK:
 			cur_item=ctrl_tool_response_focus(pvd,ctrl_tool,m_evt_code);
 			break;	
 			

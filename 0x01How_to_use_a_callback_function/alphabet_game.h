@@ -219,6 +219,7 @@ typedef struct alphabet_game{
 	int total_alphabet_num;	//total alphabet number per level
 	int remain_alphabet_num;	//The remaining number of alphabet visible per level
 	bool is_enter_next_level;	//To judge whether enter next level
+	bool is_update_screen;		//To judge whether force update screen 
 	p_void_ctrl_tool_t child_status_help;
 	unsigned int delay_time;
 }alphabet_game_t;
@@ -248,7 +249,10 @@ extern int get_remain_alphabet_num(const alphabet_game_t *alphabet_game);
 extern int dec_remain_alphabet_num(alphabet_game_t *alphabet_game);
 
 extern int set_enter_next_level(alphabet_game_t *alphabet_game, bool next_level_start);
-extern bool is_enter_next_level(alphabet_game_t *alphabet_game);
+extern bool is_enter_next_level(const alphabet_game_t *alphabet_game);
+
+extern int set_update_screen(alphabet_game_t *alphabet_game, bool update_screen);
+extern bool is_update_screen(const alphabet_game_t *alphabet_game);
 
 extern int set_delay_time(alphabet_game_t *alphabet_game, unsigned int usec);
 extern unsigned int get_delay_time(const alphabet_game_t *alphabet_game);

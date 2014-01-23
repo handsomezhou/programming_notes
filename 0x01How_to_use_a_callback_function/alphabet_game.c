@@ -428,14 +428,41 @@ int set_enter_next_level(alphabet_game_t *alphabet_game, bool next_level_start)
 	return AG_SUCCESS;
 }
 
-bool is_enter_next_level(alphabet_game_t *alphabet_game)
+bool is_enter_next_level(const alphabet_game_t *alphabet_game)
 {
-	alphabet_game_t *ag=alphabet_game;
+	const alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
 		return FALSE;
 	}
 
 	return ag->is_enter_next_level;
+}
+
+int set_update_screen(alphabet_game_t *alphabet_game, bool update_screen)
+{
+	alphabet_game_t *ag=alphabet_game;
+	bool update_scr=update_screen;
+	if(NULL==ag){
+		return AG_FAILED;
+	}
+
+	if(FALSE==update_scr){
+		ag->is_update_screen=FALSE;
+	}else{
+		ag->is_update_screen=TRUE;
+	}
+	
+	return AG_SUCCESS;
+}
+
+bool is_update_screen(const alphabet_game_t *alphabet_game)
+{
+	const alphabet_game_t *ag=alphabet_game;
+	if(NULL==ag){
+		return FALSE;
+	}
+
+	return ag->is_update_screen;	
 }
 
 int set_delay_time(alphabet_game_t *alphabet_game, unsigned int usec)

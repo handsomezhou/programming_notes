@@ -70,6 +70,7 @@ static int handle_child_status_start(alphabet_game_t *alphabet_game)
 			
 			ag->child_status_start=ctrl_tool_init(get_total_alphabet_num(ag),alphabet_game_start_res,&alphabet_game_start_event);
 			set_enter_next_level(ag,FALSE);
+			set_update_screen(ag,TRUE);
 			
 		}	
 	}
