@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
+#include <sys/time.h>
 #include "data_type.h"
 #include "message_event.h"
 #include "ctrl_tool.h"
@@ -14,6 +16,9 @@
 
 static int init_screen(screen_t *screen);
 static void exit_screen(screen_t *screen);
+
+int init_sigaction(pf_signal_process_call_back p_signal_process_callback);
+int init_timer(void);
 
 static int set_status(status_t *stts, status_t cur_status);
 static int set_time(unsigned int *time_usec, unsigned int delay_time_usec);
@@ -176,6 +181,23 @@ static ctrl_tool_callback_t alphabet_game_help_event={
 	alphabet_game_help_exit,	
 };
 
+int set_point_to_alphabet_game_t(alphabet_game_t *alphabet_game)
+{
+	alphabet_game_t *ag=alphabet_game;
+	if(NULL==ag){
+		return AG_FAILED;
+	}
+	
+	p_alphabet_game=ag;
+	
+	return AG_SUCCESS;
+}
+
+alphabet_game_t *get_point_to_alphabet_game_t(void)
+{
+	return p_alphabet_game;
+}
+
 alphabet_game_t *init_alphabet_game(void)
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
@@ -190,8 +212,9 @@ alphabet_game_t *init_alphabet_game(void)
 
 	set_cur_status(ag,MAIN_STATUS);
 	set_last_status(ag,OTHER_STATUS);
-	set_cur_level(ag,LEVEL_ONE);
-	set_remain_time(ag,ALPHABET_GAME_START_TIME_ONE);
+	set_cur_level(ag,LEVEL_ONE);	
+	set_total_time(ag,ALPHABET_GAME_START_TIME_ONE);
+	//set_remain_time(ag,get_total_time(ag));
 	set_total_alphabet_num(ag,ALPHABET_GAME_START_LEVEL_ONE_ALPHABET_NUM);
 	set_remain_alphabet_num(ag,get_total_alphabet_num(ag));
 	//set_enter_next_level(ag,TRUE);
@@ -237,6 +260,11 @@ alphabet_game_t *init_alphabet_game(void)
 	}
 
 	produce_random_alphabet_sequence(ag,get_total_alphabet_num(ag));//init alphabet_sequence
+
+	set_point_to_alphabet_game_t(ag);
+	//init_sigaction(&signal_process);
+	init_sigaction(signal_process);
+	init_timer();
 	
 	return ag;
 }
@@ -321,6 +349,30 @@ int get_cur_level(const alphabet_game_t *alphabet_game)
 	}
 
 	return ag->level;
+}
+
+int set_total_time(alphabet_game_t *alphabet_game, int sec)
+{
+	alphabet_game_t *ag=alphabet_game;
+	int sc=sec;
+	if(NULL==ag){
+		return AG_FAILED;
+	}
+
+	ag->total_time=sc;
+	set_remain_time(ag,ag->total_time);
+	
+	return AG_SUCCESS;
+}
+
+int get_total_time(const alphabet_game_t *alphabet_game)
+{
+	const alphabet_game_t *ag=alphabet_game;
+	if(NULL==ag){
+		return (ALPHABET_GAME_START_TIME_ZERO);
+	}
+
+	return ag->total_time;
 }
 
 int set_remain_time(alphabet_game_t *alphabet_game, int sec)
@@ -571,6 +623,38 @@ static void exit_screen(screen_t *screen)
 	return ;
 }
 
+int init_sigaction(pf_signal_process_call_back p_signal_process_callback)
+{ 
+	pf_signal_process_call_back p_signal_process=p_signal_process_callback;
+	struct sigaction act;
+	
+	//act.sa_sigaction=signal_process;
+	//act.sa_flags=SA_SIGINFO;
+	act.sa_handler=p_signal_process;
+	act.sa_flags=0;
+    sigemptyset(&act.sa_mask);
+	sigaction(SIGALRM, &act, NULL);
+	//sigaction(SIGPROF, &act, NULL);
+	
+	return 0;
+}
+
+int init_timer(void)
+{
+	struct itimerval new_value;
+
+	new_value.it_value.tv_sec=1;
+	new_value.it_value.tv_usec=0;
+	new_value.it_interval=new_value.it_value;
+	//new_value.it_value.tv_sec=new_value.it_value.tv_sec;	//Not work properly, only executed once.
+	//new_value.it_value.tv_usec=new_value.it_value.tv_usec;//Not work properly, only executed once.
+
+	setitimer(ITIMER_REAL, &new_value, NULL);	//The signal will be received properly.
+	//setitimer(ITIMER_PROF, &new_value, NULL);	//The signal won't be received properly because sleep in loop.
+	
+	return 0;
+}
+
 static int set_status(status_t *status, status_t cur_status)
 {
 	status_t *stts=status;
@@ -752,7 +836,8 @@ static int alphabet_game_start_exit(p_void_data_t p_void_data, const m_evt_code_
 		return AG_FAILED;
 	}
 
-	set_cur_status(ag,MAIN_STATUS);
+	exit_child_status_start(ag);
+	//set_cur_status(ag,MAIN_STATUS);
 		
 	return AG_SUCCESS;
 }
@@ -767,7 +852,7 @@ static int alphabet_game_start_response_focus(p_void_data_t p_void_data, const m
 		return AG_FAILED;
 	}
 
-	if(FALSE==judge_cur_sort_foremost_alphabet(ag,ag->alphabet_id[sel_ndx],sel_ndx)){
+	if(FALSE==judge_cur_sort_foremost_alphabet(ag,ag->alphabet_id[sel_ndx])){
 		show_prompt(&ag->scr,ALPHABET_GAME_HELP_SELECT_WRONG,strlen(ALPHABET_GAME_HELP_SELECT_WRONG),COLOR_MSG_ERROR);
 		refresh_screen(ag->scr.win);
 		sleep_delay_time(usec);
@@ -780,24 +865,25 @@ static int alphabet_game_start_response_focus(p_void_data_t p_void_data, const m
 		set_enter_next_level(ag,TRUE);
 		switch(get_cur_level(ag)){
 			case LEVEL_ONE:
-				set_cur_level(ag,LEVEL_TWO);
-				set_remain_time(ag,ALPHABET_GAME_START_TIME_TWO);
+				set_cur_level(ag,LEVEL_TWO);				
+				set_total_time(ag,ALPHABET_GAME_START_TIME_TWO);
+				//set_remain_time(ag,ALPHABET_GAME_START_TIME_TWO);
 				set_total_alphabet_num(ag,ALPHABET_GAME_START_LEVEL_TWO_ALPHABET_NUM);
 				set_remain_alphabet_num(ag,get_total_alphabet_num(ag));	
 				break;
 			case LEVEL_TWO:
 				set_cur_level(ag,LEVEL_THREE);
-				set_remain_time(ag,ALPHABET_GAME_START_TIME_THREE);
+				set_total_time(ag,ALPHABET_GAME_START_TIME_THREE);
+				//set_remain_time(ag,ALPHABET_GAME_START_TIME_THREE);
 				set_total_alphabet_num(ag,ALPHABET_GAME_START_LEVEL_THREE_ALPHABET_NUM);
 				set_remain_alphabet_num(ag,get_total_alphabet_num(ag));	
 				break;
 			case LEVEL_THREE:
-				set_cur_level(ag,LEVEL_ONE);
-				set_remain_time(ag,ALPHABET_GAME_START_TIME_ONE);
+				set_cur_level(ag,LEVEL_ONE);				
+				set_total_time(ag,ALPHABET_GAME_START_TIME_ONE);
+				//set_remain_time(ag,ALPHABET_GAME_START_TIME_ONE);
 				set_total_alphabet_num(ag,ALPHABET_GAME_START_LEVEL_ONE_ALPHABET_NUM);
-				set_remain_alphabet_num(ag,get_total_alphabet_num(ag));	
-				
-				set_cur_status(ag,MAIN_STATUS);
+				exit_child_status_start(ag);
 				break;
 			default:
 				set_cur_status(ag,MAIN_STATUS);

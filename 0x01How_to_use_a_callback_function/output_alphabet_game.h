@@ -13,8 +13,8 @@ extern int refresh_screen(window_t *window);
 extern int get_left_vertex(const screen_t *screen,coordinate_t *coordinate);
 extern int show_foreground(const screen_t *screen);
 extern int show_prompt(const screen_t *screen, const char *prompt, int size_prompt, color_t color);
+extern int show_pass_msg(const screen_t *screen);
 extern int show_button(const screen_t *scr,int offset_y,int offset_x,int sel_flag,const char *text,int attrs);
-
 
 #endif	/*OUTPUT_ALPHABET_GAME_H*/
 

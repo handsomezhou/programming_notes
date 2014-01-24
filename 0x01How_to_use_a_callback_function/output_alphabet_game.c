@@ -95,57 +95,6 @@ int paint_alphabet_game(alphabet_game_t *alphabet_game)
 	return AG_SUCCESS;  
 }
 
-#if 0
-int clear_screen(alphabet_game_t *alphabet_game)
-{
-	alphabet_game_t *ag=alphabet_game;
-	if(NULL==ag){		
-		return AG_FAILED;
-	}
-	p_void_ctrl_tool_t pvct=NULL;
-	bool force_update=FALSE;
-	screen_t *scr=&ag->scr;
-	coordinate_t left_vertex;
-
-	//get address of p_void_ctrl_t
-	switch(ag->status){
-		case MAIN_STATUS:
-			pvct=ag->main_status;
-			break;
-		case CHILD_STATUS_START:
-			pvct=ag->child_status_start;
-			//if(is_enter_next_level(ag)==TRUE){
-				force_update=TRUE;
-			//}
-			break;
-		case CHILD_STATUS_HELP:
-			pvct=ag->child_status_help;
-			break;
-		default:
-			pvct=NULL;
-			break;
-	}
-	
-	if((get_last_status(ag)!=get_cur_status(ag))){
-		force_update=TRUE;
-		set_last_status(ag,get_cur_status(ag));
-	}
-
-	update_screen_change(scr,force_update);
-	if(TRUE==is_screen_change(scr)){
-		set_screen_change(scr,FALSE);
-		get_left_vertex(scr,&left_vertex);
-		set_left_vertex(pvct,&left_vertex);
-		//werase(scr->win);
-	}
-
-	werase(scr->win);
-	
-	return AG_SUCCESS;
-}
-#endif
-
-
 int refresh_screen(window_t *window)
 {
 	window_t *win=window;
@@ -356,6 +305,39 @@ int show_prompt(const screen_t *screen, const char *prompt, int size_prompt, col
 		
 	return AG_SUCCESS;	
 }
+
+int show_pass_msg(const screen_t *screen)
+{
+	int i=0,y=0,num=0;
+	const screen_t *scr=screen;
+	if((NULL==scr)){
+		return AG_FAILED;
+	}
+
+	char pass_msg[][MAX_DATA_LEN_PER_LINE]={
+		{"You successfully passed all levels!"},
+		{" "},
+		{" "},
+		{" "},
+		{"Congratulation to you!"},
+		{" "},
+		{" "},
+		{" "},
+		{"See you next time!"},
+	};
+		
+	y=scr->foreground.top+3;
+	num=sizeof(pass_msg)/sizeof(pass_msg[0]);
+
+	open_colors(COLOR_TEXT_CONTENT,A_BOLD);
+	for(i=0; i<num; i++){
+		mvwprintw(scr->win,y++,scr->foreground.left+(scr->foreground.width-strlen(pass_msg[i]))/2,"%s",pass_msg[i]);
+	}
+	close_colors(COLOR_TEXT_CONTENT,A_BOLD);
+		
+	return AG_SUCCESS;
+}
+
 
 static int update_screen_change(screen_t *screen, bool force_update)
 {
@@ -646,4 +628,6 @@ int show_button(const screen_t *scr,int offset_y,int offset_x,int sel_flag,const
 	
 	return AG_SUCCESS;
 }
+
+
 

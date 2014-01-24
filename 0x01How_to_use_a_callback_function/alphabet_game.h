@@ -63,7 +63,7 @@
 #define ALPHABET_GAME_START_TIME_ZERO	(0)
 #define ALPHABET_GAME_START_TIME_ONE	(30)
 #define ALPHABET_GAME_START_TIME_TWO	(45)
-#define ALPHABET_GAME_START_TIME_THREE	(60)
+#define ALPHABET_GAME_START_TIME_THREE	(90)
 
 #define ALPHABET_GAME_START_MIN_UNIT_TIME	(1)	//sec
 #define ALPHABET_GAME_START_MAX_UNIT_TIME	(5)	//sec
@@ -219,6 +219,7 @@ typedef struct alphabet_game{
 	p_void_ctrl_tool_t child_status_start;
 	int alphabet_id[ALPHABET_GAME_START_WIDGET_NUM];
 	int level;			//game level
+	int total_time;		//game total time per level 
 	int remain_time;	//game remain_time
 	int total_alphabet_num;	//total alphabet number per level
 	int remain_alphabet_num;	//The remaining number of alphabet visible per level
@@ -231,6 +232,10 @@ typedef struct alphabet_game{
 extern ctrl_tool_callback_t alphabet_game_start_event;
 extern ctrl_tool_res_t alphabet_game_start_res[ALPHABET_GAME_START_WIDGET_NUM];
 
+alphabet_game_t *p_alphabet_game;
+extern int set_point_to_alphabet_game_t(alphabet_game_t *alphabet_game);
+extern alphabet_game_t *get_point_to_alphabet_game_t(void);
+
 extern alphabet_game_t *init_alphabet_game(void);
 extern void exit_alphabet_game(alphabet_game_t *alphabet_game);
 
@@ -242,6 +247,8 @@ extern int get_last_status(const alphabet_game_t *alphabet_game);
 extern int set_cur_level(alphabet_game_t *alphabet_game, int level);
 extern int get_cur_level(const alphabet_game_t *alphabet_game);
 
+extern int set_total_time(alphabet_game_t *alphabet_game, int sec);
+extern int get_total_time(const alphabet_game_t *alphabet_game);
 extern int set_remain_time(alphabet_game_t *alphabet_game, int sec);
 extern int get_remain_time(const alphabet_game_t *alphabet_game);
 extern int dec_remain_time(alphabet_game_t *alphabet_game, int unit_time_sec);	//decrement
@@ -263,4 +270,5 @@ extern unsigned int get_delay_time(const alphabet_game_t *alphabet_game);
 extern void sleep_delay_time(unsigned int usec);
 
 extern int init_m_evt_code(m_evt_code_t *p_m_evt_code);
+
 #endif	/*ALPHABET_GAME_H*/
