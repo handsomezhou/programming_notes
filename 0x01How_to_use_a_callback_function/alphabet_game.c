@@ -330,6 +330,23 @@ int get_last_status(const alphabet_game_t *alphabet_game)
 	return  ag->last_status;
 }
 
+
+int init_m_evt_code(m_evt_code_t *p_m_evt_code)
+{
+	m_evt_code_t *m_evt_code=p_m_evt_code;
+	if(NULL==m_evt_code){
+		return AG_FAILED;
+	}
+	
+	m_evt_code->m_evt_type=M_EVT_NO_INPUT;
+	m_evt_code->m_evt_param.no_input_t.no_input=NO_INPUT_DATA;
+	memset(&m_evt_code->m_evt_param.mouse_t.mouse,0,sizeof(m_evt_code->m_evt_param.mouse_t.mouse));
+	m_evt_code->m_evt_param.key_t.key=NO_KEY_DATA;
+	m_evt_code->m_evt_param.other_t.other=NO_OTHER_DATA;
+
+	return AG_SUCCESS;
+}
+
 int set_cur_level(alphabet_game_t *alphabet_game, int level)
 {
 	alphabet_game_t *ag=alphabet_game;
@@ -547,22 +564,6 @@ void sleep_delay_time(unsigned int usec)
 {
 	unsigned int us=usec;
 	usleep(((us<DELAY_TIME_MIN)?(DELAY_TIME_MIN):(us)));	
-}
-
-int init_m_evt_code(m_evt_code_t *p_m_evt_code)
-{
-	m_evt_code_t *m_evt_code=p_m_evt_code;
-	if(NULL==m_evt_code){
-		return AG_FAILED;
-	}
-	
-	m_evt_code->m_evt_type=M_EVT_NO_INPUT;
-	m_evt_code->m_evt_param.no_input_t.no_input=NO_INPUT_DATA;
-	memset(&m_evt_code->m_evt_param.mouse_t.mouse,0,sizeof(m_evt_code->m_evt_param.mouse_t.mouse));
-	m_evt_code->m_evt_param.key_t.key=NO_KEY_DATA;
-	m_evt_code->m_evt_param.other_t.other=NO_OTHER_DATA;
-
-	return AG_SUCCESS;
 }
 
 static int init_screen(screen_t *screen)

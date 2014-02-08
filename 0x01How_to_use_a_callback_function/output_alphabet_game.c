@@ -72,6 +72,7 @@ int paint_alphabet_game(alphabet_game_t *alphabet_game)
 	}
 			
 	clear_screen(ag);
+	
 	switch(ag->status){
 		case MAIN_STATUS:
 			paint_main_status(ag);

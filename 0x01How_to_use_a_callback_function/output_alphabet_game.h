@@ -8,7 +8,6 @@
 
 extern int clear_screen(alphabet_game_t *alphabet_game);
 extern int paint_alphabet_game(alphabet_game_t *alphabet_game);
-
 extern int refresh_screen(window_t *window);
 extern int get_left_vertex(const screen_t *screen,coordinate_t *coordinate);
 extern int show_foreground(const screen_t *screen);

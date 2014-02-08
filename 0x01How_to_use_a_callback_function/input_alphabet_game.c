@@ -33,17 +33,17 @@ static int get_m_evt_code(alphabet_game_t *alphabet_game,m_evt_code_t *m_evt_cod
 	chr=wgetch(ag->scr.win);
 	switch(chr){
 		case NO_INPUT_DATA://no need to deal
-			mvwprintw(ag->scr.win,8,1,"%s","NO_INPUT_DATA");
+			//mvwprintw(ag->scr.win,8,1,"%s","NO_INPUT_DATA");
 			ag->m_evt_code.m_evt_type=M_EVT_NO_INPUT;
 			ag->m_evt_code.m_evt_param.other_t.other=NO_INPUT_DATA;
 			break;
 		case KEY_MOUSE:	//mouse event
-			mvwprintw(ag->scr.win,10,1,"%s","KEY_MOUSE");
+			//mvwprintw(ag->scr.win,10,1,"%s","KEY_MOUSE");
 			ag->m_evt_code.m_evt_type=M_EVT_MOUSE;
 			getmouse(&ag->m_evt_code.m_evt_param.mouse_t.mouse);
 			break;
 		default:		//key event
-			mvwprintw(ag->scr.win,12,1,"%s---[%d]","KEY_EVENT",chr);				
+			//mvwprintw(ag->scr.win,12,1,"%s---[%d]","KEY_EVENT",chr);				
 			ag->m_evt_code.m_evt_type=M_EVT_KEY;
 			ag->m_evt_code.m_evt_param.key_t.key=chr;
 			break;

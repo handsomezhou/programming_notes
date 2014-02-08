@@ -168,17 +168,6 @@ typedef enum{
 	ALPHABET_GAME_HELP_WIDGET_NUM,
 }child_status_help_t;
 
-#if 0
-typedef enum{
-
-}child_status_start_t;
-
-
-typedef enum{
-
-}child_status_exit_t;
-#endif
-
 typedef enum color{
 	//window 
 	COLOR_FOREGROUND=1,
@@ -244,6 +233,8 @@ extern int get_cur_status(const alphabet_game_t *alphabet_game);
 extern int set_last_status(alphabet_game_t *alphabet_game, status_t status);
 extern int get_last_status(const alphabet_game_t *alphabet_game);
 
+extern int init_m_evt_code(m_evt_code_t *p_m_evt_code);
+
 extern int set_cur_level(alphabet_game_t *alphabet_game, int level);
 extern int get_cur_level(const alphabet_game_t *alphabet_game);
 
@@ -268,7 +259,5 @@ extern bool is_update_screen(const alphabet_game_t *alphabet_game);
 extern int set_delay_time(alphabet_game_t *alphabet_game, unsigned int usec);
 extern unsigned int get_delay_time(const alphabet_game_t *alphabet_game);
 extern void sleep_delay_time(unsigned int usec);
-
-extern int init_m_evt_code(m_evt_code_t *p_m_evt_code);
 
 #endif	/*ALPHABET_GAME_H*/
