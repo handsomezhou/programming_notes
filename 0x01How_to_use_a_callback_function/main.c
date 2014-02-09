@@ -16,7 +16,7 @@ int main(int argc,char *argv[])
 	alphabet_game=init_alphabet_game();
 	do{
 		if(NULL==alphabet_game){
-			ret=AG_FAILED;
+			ret=RET_FAILED;
 			break;
 		}
 		while(CHILD_STATUS_EXIT!=get_cur_status(alphabet_game)){
@@ -25,7 +25,7 @@ int main(int argc,char *argv[])
 			paint_alphabet_game(alphabet_game);
 			sleep_delay_time(get_delay_time(alphabet_game));
 		}
-		ret=AG_SUCCESS;
+		ret=RET_SUCCESS;
 	}while(0);
 	
 	exit_alphabet_game(alphabet_game);

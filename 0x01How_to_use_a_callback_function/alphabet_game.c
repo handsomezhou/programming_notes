@@ -185,12 +185,12 @@ int set_point_to_alphabet_game_t(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	p_alphabet_game=ag;
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 alphabet_game_t *get_point_to_alphabet_game_t(void)
@@ -202,7 +202,7 @@ alphabet_game_t *init_alphabet_game(void)
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	alphabet_game_t *ag=NULL;
-	int ret=AG_FAILED;
+	int ret=RET_FAILED;
 	
 	ag=(alphabet_game_t *)malloc(sizeof(alphabet_game_t));
 
@@ -222,7 +222,7 @@ alphabet_game_t *init_alphabet_game(void)
 	set_delay_time(ag,DELAY_TIME);
 	
 	ret=init_screen(&ag->scr);
-	if(AG_FAILED==ret){
+	if(RET_FAILED==ret){
 		free(ag);
 		ag=NULL;
 
@@ -293,7 +293,7 @@ int set_cur_status(alphabet_game_t *alphabet_game, status_t status)
 	alphabet_game_t *ag=alphabet_game;
 	status_t stts=status;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	return set_status(&ag->status,stts);
@@ -314,7 +314,7 @@ int set_last_status(alphabet_game_t *alphabet_game, status_t status)
 	alphabet_game_t *ag=alphabet_game;
 	status_t stts=status;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	return set_status(&ag->last_status,stts);
@@ -335,7 +335,7 @@ int init_m_evt_code(m_evt_code_t *p_m_evt_code)
 {
 	m_evt_code_t *m_evt_code=p_m_evt_code;
 	if(NULL==m_evt_code){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	m_evt_code->m_evt_type=M_EVT_NO_INPUT;
@@ -344,7 +344,7 @@ int init_m_evt_code(m_evt_code_t *p_m_evt_code)
 	m_evt_code->m_evt_param.key_t.key=NO_KEY_DATA;
 	m_evt_code->m_evt_param.other_t.other=NO_OTHER_DATA;
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 int set_cur_level(alphabet_game_t *alphabet_game, int level)
@@ -352,7 +352,7 @@ int set_cur_level(alphabet_game_t *alphabet_game, int level)
 	alphabet_game_t *ag=alphabet_game;
 	int lvl=level;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	return set_level(&ag->level,lvl);
@@ -373,13 +373,13 @@ int set_total_time(alphabet_game_t *alphabet_game, int sec)
 	alphabet_game_t *ag=alphabet_game;
 	int sc=sec;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	ag->total_time=sc;
 	set_remain_time(ag,ag->total_time);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 int get_total_time(const alphabet_game_t *alphabet_game)
@@ -397,12 +397,12 @@ int set_remain_time(alphabet_game_t *alphabet_game, int sec)
 	alphabet_game_t *ag=alphabet_game;
 	int sc=sec;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	ag->remain_time=sc;
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 int get_remain_time(const alphabet_game_t *alphabet_game)
@@ -434,12 +434,12 @@ int set_total_alphabet_num(alphabet_game_t *alphabet_game, int alphabet_num)
 	alphabet_game_t *ag=alphabet_game;
 	int an=alphabet_num;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	set_alphabet_num(&ag->total_alphabet_num,an);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 int get_total_alphabet_num(const alphabet_game_t *alphabet_game)
@@ -457,12 +457,12 @@ int set_remain_alphabet_num(alphabet_game_t *alphabet_game, int alphabet_num)
 	alphabet_game_t *ag=alphabet_game;
 	int an=alphabet_num;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	set_alphabet_num(&ag->remain_alphabet_num,an);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 int get_remain_alphabet_num(const alphabet_game_t *alphabet_game)
@@ -489,7 +489,7 @@ int set_enter_next_level(alphabet_game_t *alphabet_game, bool next_level_start)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	if(FALSE==next_level_start){
@@ -498,7 +498,7 @@ int set_enter_next_level(alphabet_game_t *alphabet_game, bool next_level_start)
 		ag->is_enter_next_level=TRUE;
 	}
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 bool is_enter_next_level(const alphabet_game_t *alphabet_game)
@@ -516,7 +516,7 @@ int set_update_screen(alphabet_game_t *alphabet_game, bool update_screen)
 	alphabet_game_t *ag=alphabet_game;
 	bool update_scr=update_screen;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	if(FALSE==update_scr){
@@ -525,7 +525,7 @@ int set_update_screen(alphabet_game_t *alphabet_game, bool update_screen)
 		ag->is_update_screen=TRUE;
 	}
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 bool is_update_screen(const alphabet_game_t *alphabet_game)
@@ -543,7 +543,7 @@ int set_delay_time(alphabet_game_t *alphabet_game, unsigned int usec)
 	alphabet_game_t *ag=alphabet_game;
 	unsigned int us=usec;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	return set_time(&ag->delay_time,us);
@@ -571,7 +571,7 @@ static int init_screen(screen_t *screen)
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	screen_t *scr=screen;
 	if(NULL==scr){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	//init ncurses
@@ -608,7 +608,7 @@ static int init_screen(screen_t *screen)
 	keypad(scr->win,TRUE);
 	nodelay(stdscr,TRUE);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static void exit_screen(screen_t *screen)
@@ -660,12 +660,12 @@ static int set_status(status_t *status, status_t cur_status)
 {
 	status_t *stts=status;
 	if(NULL==stts){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	*stts=cur_status;
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int set_time(unsigned int *time_usec, unsigned int delay_time_usec)
@@ -673,12 +673,12 @@ static int set_time(unsigned int *time_usec, unsigned int delay_time_usec)
 	unsigned int *tm_us=time_usec;
 	unsigned int delay_tm_us=delay_time_usec;
 	if(NULL==tm_us){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	*tm_us=( ((delay_tm_us>=DELAY_TIME_MIN)&&(delay_tm_us<=DELAY_TIME_MAX))?(delay_tm_us):(DELAY_TIME_MIN) );
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 
@@ -686,12 +686,12 @@ static int set_level(int *level,int cur_level)
 {
 	int *lvl=level;
 	if(NULL==lvl){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	*lvl=cur_level;
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int set_alphabet_num(int *alphabet_num, int cur_alphabet_num)
@@ -699,35 +699,39 @@ static int set_alphabet_num(int *alphabet_num, int cur_alphabet_num)
 	int *an=alphabet_num;
 	int cur_an=cur_alphabet_num;
 	if(NULL==an){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	*an=((cur_an>=ALPHABET_GAME_START_LEVEL_ONE_ALPHABET_NUM)&&(cur_an<=ALPHABET_GAME_START_LEVEL_THREE_ALPHABET_NUM))?\
 		(cur_an):(ALPHABET_GAME_START_LEVEL_ONE_ALPHABET_NUM);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_paint(p_void_data_t p_void_data, rect_t *p_rect, int index, bool sel_flag)
 {
-	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
-	screen_t *scr=&ag->scr;
+	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;	
 	rect_t *rct=p_rect;
-	if((NULL==scr)||(NULL==rct)){
-		return AG_FAILED;
+	screen_t *scr=NULL;
+	if((NULL==ag)||(NULL==rct)){
+		return RET_FAILED;
+	}
+
+	scr=&ag->scr;
+	if((NULL==scr)){
+		return RET_FAILED;
 	}
 	
-	show_foreground(scr);
 	show_button(scr,rct->top,rct->left,sel_flag,alphabet_game_res[index].pdata,A_BOLD);
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 	
 static int alphabet_game_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -739,7 +743,7 @@ static int alphabet_game_select(p_void_data_t p_void_data, const m_evt_code_t *p
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -753,12 +757,12 @@ static int alphabet_game_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m
 	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
 	const m_evt_code_t *m_evt_code=p_m_evt_code;
 	if((NULL==ag)||(NULL==m_evt_code)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	set_cur_status(ag,CHILD_STATUS_EXIT);
 		
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_response_focus(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -767,7 +771,7 @@ static int alphabet_game_response_focus(p_void_data_t p_void_data, const m_evt_c
 	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
 	const m_evt_code_t *m_evt_code=p_m_evt_code;
 	if((NULL==ag)||(NULL==m_evt_code)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	switch(index){
@@ -785,30 +789,35 @@ static int alphabet_game_response_focus(p_void_data_t p_void_data, const m_evt_c
 			break;
 	}
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 
 static int alphabet_game_start_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag)
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
-	screen_t *scr=&ag->scr;
+	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;	
 	rect_t *rct=p_rect;
-	if((NULL==scr)||(NULL==rct)){
-		return AG_FAILED;
+	screen_t *scr=NULL;
+	if((NULL==ag)||(NULL==rct)){
+		return RET_FAILED;
+	}
+
+	scr=&ag->scr;
+	if((NULL==scr)){
+		return RET_FAILED;
 	}
 	
 	show_button(scr,rct->top,rct->left,sel_flag,alphabet_game_start_res[ag->alphabet_id[index]].pdata,A_BOLD);
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_start_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_start_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -820,7 +829,7 @@ static int alphabet_game_start_select(p_void_data_t p_void_data, const m_evt_cod
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_start_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -834,13 +843,13 @@ static int alphabet_game_start_exit(p_void_data_t p_void_data, const m_evt_code_
 	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
 	const m_evt_code_t *m_evt_code=p_m_evt_code;
 	if((NULL==ag)||(NULL==m_evt_code)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	exit_child_status_start(ag);
 	//set_cur_status(ag,MAIN_STATUS);
 		
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_start_response_focus(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -850,7 +859,7 @@ static int alphabet_game_start_response_focus(p_void_data_t p_void_data, const m
 	const m_evt_code_t *m_evt_code=p_m_evt_code;
 	int sel_ndx=sel_index;
 	if((NULL==ag)||(NULL==m_evt_code)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	if(FALSE==judge_cur_sort_foremost_alphabet(ag,ag->alphabet_id[sel_ndx])){
@@ -892,29 +901,34 @@ static int alphabet_game_start_response_focus(p_void_data_t p_void_data, const m
 		}
 	}
 		
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_help_paint(p_void_data_t p_void_data, rect_t *p_rect,int index, bool sel_flag)
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
-	screen_t *scr=&ag->scr;
+	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;	
 	rect_t *rct=p_rect;
-	if((NULL==scr)||(NULL==rct)){
-		return AG_FAILED;
+	screen_t *scr=NULL;
+	if((NULL==ag)||(NULL==rct)){
+		return RET_FAILED;
 	}
-	
+
+	scr=&ag->scr;
+	if((NULL==scr)){
+		return RET_FAILED;
+	}
+		
 	show_button(scr,rct->top,rct->left,sel_flag,alphabet_game_help_res[index].pdata,A_BOLD);
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_help_pen_up(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)	
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_help_pen_down(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)	
@@ -924,7 +938,7 @@ static int alphabet_game_help_pen_down(p_void_data_t p_void_data, const m_evt_co
 	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
 	const m_evt_code_t *m_evt_code=p_m_evt_code;
 	if((NULL==ag)||(NULL==m_evt_code)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	switch(index){
@@ -935,14 +949,14 @@ static int alphabet_game_help_pen_down(p_void_data_t p_void_data, const m_evt_co
 			break;
 	}
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_help_select(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)	
 {
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_help_enter(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -952,7 +966,7 @@ static int alphabet_game_help_enter(p_void_data_t p_void_data, const m_evt_code_
 	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
 	const m_evt_code_t *m_evt_code=p_m_evt_code;
 	if((NULL==ag)||(NULL==m_evt_code)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	switch(index){
@@ -963,7 +977,7 @@ static int alphabet_game_help_enter(p_void_data_t p_void_data, const m_evt_code_
 			break;
 	}
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int alphabet_game_help_exit(p_void_data_t p_void_data, const m_evt_code_t *p_m_evt_code, int sel_index)
@@ -972,11 +986,11 @@ static int alphabet_game_help_exit(p_void_data_t p_void_data, const m_evt_code_t
 	alphabet_game_t *ag=(alphabet_game_t *)p_void_data;
 	const m_evt_code_t *m_evt_code=p_m_evt_code;
 	if((NULL==ag)||(NULL==m_evt_code)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	set_cur_status(ag,MAIN_STATUS);
 		
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 

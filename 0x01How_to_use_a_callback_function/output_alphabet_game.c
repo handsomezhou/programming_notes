@@ -39,7 +39,7 @@ int clear_screen(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){		
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	switch(ag->status){
@@ -60,7 +60,7 @@ int clear_screen(alphabet_game_t *alphabet_game)
 			break;
 	}
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 
@@ -68,7 +68,7 @@ int paint_alphabet_game(alphabet_game_t *alphabet_game)
 {
  	alphabet_game_t *ag=alphabet_game;
  	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 			
 	clear_screen(ag);
@@ -93,19 +93,19 @@ int paint_alphabet_game(alphabet_game_t *alphabet_game)
 
 	refresh_screen(ag->scr.win);
   
-	return AG_SUCCESS;  
+	return RET_SUCCESS;  
 }
 
 int refresh_screen(window_t *window)
 {
 	window_t *win=window;
 	if(NULL==win){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	wrefresh(win);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int clear_status_screen(alphabet_game_t * alphabet_game,p_void_ctrl_tool_t p_void_ctrl_tool)
@@ -113,7 +113,7 @@ static int clear_status_screen(alphabet_game_t * alphabet_game,p_void_ctrl_tool_
 	
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	screen_t *scr=&ag->scr;
 	p_void_ctrl_tool_t pvct=p_void_ctrl_tool;
@@ -136,13 +136,13 @@ static int clear_status_screen(alphabet_game_t * alphabet_game,p_void_ctrl_tool_
 
 	werase(scr->win);
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 static int clear_main_status(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	return clear_status_screen(ag,ag->main_status);
@@ -152,7 +152,7 @@ static int clear_child_status_start(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	return clear_status_screen(ag,ag->child_status_start);
@@ -162,7 +162,7 @@ static int clear_child_status_help(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	return clear_status_screen(ag,ag->child_status_help);
@@ -172,7 +172,7 @@ static int clear_child_status_exit(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	return clear_status_screen(ag,NULL);
@@ -182,7 +182,7 @@ static int clear_child_status_default(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	return clear_status_screen(ag,NULL);	
@@ -193,14 +193,14 @@ static int paint_main_status(alphabet_game_t *alphabet_game)
 {	
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	show_foreground(&ag->scr);
 	show_title(&ag->scr,GAME_NAME,/*sizeof(GAME_NAME)-1*/strlen(GAME_NAME));
 	ctrl_tool_paint(ag,ag->main_status);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int paint_child_status_start(alphabet_game_t *alphabet_game)
@@ -208,7 +208,7 @@ static int paint_child_status_start(alphabet_game_t *alphabet_game)
 	//mvwprintw(stdscr,1,1,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_START);
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	show_foreground(&ag->scr);
@@ -217,7 +217,7 @@ static int paint_child_status_start(alphabet_game_t *alphabet_game)
 	show_time(&ag->scr,ALPHABET_GAME_START_TIME,strlen(ALPHABET_GAME_START_LEVEL),get_remain_time(ag));
 	ctrl_tool_paint(ag,ag->child_status_start);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int paint_child_status_help(alphabet_game_t *alphabet_game)
@@ -225,7 +225,7 @@ static int paint_child_status_help(alphabet_game_t *alphabet_game)
 //	mvwprintw(stdscr,2,2,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_HELP);
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	show_foreground(&ag->scr);
@@ -233,7 +233,7 @@ static int paint_child_status_help(alphabet_game_t *alphabet_game)
 	show_help_content(&ag->scr);
 	ctrl_tool_paint(ag,ag->child_status_help);
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int paint_child_status_exit(alphabet_game_t *alphabet_game)
@@ -241,22 +241,24 @@ static int paint_child_status_exit(alphabet_game_t *alphabet_game)
 	//mvwprintw(stdscr,5+CHILD_STATUS_EXIT,5+CHILD_STATUS_EXIT,"%d-%s-%d",__LINE__,__FUNCTION__,CHILD_STATUS_EXIT);
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
+
 	const unsigned int usec=DELAY_TIME_MAX;
 	show_foreground(&ag->scr);
 	show_title(&ag->scr,GAME_NAME,strlen(GAME_NAME));
 	show_exit_content(&ag->scr);
 	refresh_screen(ag->scr.win);
 	sleep_delay_time(usec);
-	return AG_SUCCESS;
+	
+	return RET_SUCCESS;
 }
 
 static int paint_child_status_default(alphabet_game_t * alphabet_game)
 {
 	mvwprintw(stdscr,5+CHILD_STATUS_EXIT,5+CHILD_STATUS_EXIT,"%d-%s-default",__LINE__,__FUNCTION__);
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 int get_left_vertex(const screen_t *screen,coordinate_t *coordinate)
@@ -264,27 +266,27 @@ int get_left_vertex(const screen_t *screen,coordinate_t *coordinate)
 	const screen_t *scr=screen;
 	coordinate_t *ce=coordinate;
 	if((NULL==scr)||(NULL==coordinate)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
  
 	ce->y=((scr->foreground.top>=0)?(scr->foreground.top):(0));
 	ce->x=((scr->foreground.left>=0)?(scr->foreground.left):(0));
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 int show_foreground(const screen_t *screen)
 {
 	const screen_t *scr=screen;
 	if(NULL==scr){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	open_colors(COLOR_FOREGROUND,A_BOLD);
 	show_box(scr->win,scr->foreground.top,scr->foreground.left,scr->foreground.top+scr->foreground.height-1,scr->foreground.left+scr->foreground.width-1,A_BOLD);
 	close_colors(COLOR_FOREGROUND,A_BOLD);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 int show_prompt(const screen_t *screen, const char *prompt, int size_prompt, color_t color)
@@ -294,7 +296,7 @@ int show_prompt(const screen_t *screen, const char *prompt, int size_prompt, col
 	const screen_t *scr=screen;
 	const char *ppt=prompt;
 	if((NULL==scr)||(NULL==ppt)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	y=scr->foreground.top+scr->foreground.height-2;
@@ -304,7 +306,7 @@ int show_prompt(const screen_t *screen, const char *prompt, int size_prompt, col
 	mvwprintw(scr->win,y,x,"%s",ppt);
 	close_colors(color,A_BOLD);
 		
-	return AG_SUCCESS;	
+	return RET_SUCCESS;	
 }
 
 int show_pass_msg(const screen_t *screen)
@@ -312,7 +314,7 @@ int show_pass_msg(const screen_t *screen)
 	int i=0,y=0,num=0;
 	const screen_t *scr=screen;
 	if((NULL==scr)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	char pass_msg[][MAX_DATA_LEN_PER_LINE]={
@@ -336,15 +338,42 @@ int show_pass_msg(const screen_t *screen)
 	}
 	close_colors(COLOR_TEXT_CONTENT,A_BOLD);
 		
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
+int show_button(const screen_t *scr,int offset_y,int offset_x,int sel_flag,const char *text,int attrs)
+{
+	if(NULL==scr){
+		return RET_FAILED;
+	}
+	switch(sel_flag){
+		case TRUE:
+			open_colors(COLOR_ICON_SELECT,A_BOLD);
+			break;
+		default:			
+			open_colors(COLOR_ICON_NORMAL,A_BOLD);
+			break;
+	}
+
+	mvwprintw(scr->win,scr->foreground.top+offset_y,scr->foreground.left+offset_x,"%s",text);
+	
+	switch(sel_flag){
+		case TRUE:
+			close_colors(COLOR_ICON_SELECT,A_BOLD);
+			break;
+		default:			
+			close_colors(COLOR_ICON_NORMAL,A_BOLD);
+			break;
+	}		
+	
+	return RET_SUCCESS;
+}
 
 static int update_screen_change(screen_t *screen, bool force_update)
 {
 	screen_t *scr=screen;
 	if(NULL==scr){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	int16_t height,width;
@@ -359,19 +388,19 @@ static int update_screen_change(screen_t *screen, bool force_update)
 		set_screen_change(scr,TRUE);
 	}
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int set_screen_change(screen_t *screen,bool screen_change)
 {
 	screen_t *scr=screen;
 	if(NULL==scr){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	(FALSE==screen_change)?(scr->screen_change=FALSE):(scr->screen_change=TRUE);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static bool is_screen_change(const screen_t *screen)
@@ -410,7 +439,7 @@ static int show_title(const screen_t *screen, const char *propmt, int size_propm
 	const screen_t *scr=screen;
 	const char *ppt=propmt;
 	if((NULL==scr)||(NULL==ppt)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	y=scr->foreground.top+1;
@@ -420,7 +449,7 @@ static int show_title(const screen_t *screen, const char *propmt, int size_propm
 	mvwprintw(scr->win,y,x,"%s",ppt);
 	close_colors(COLOR_TITLE,A_BOLD);
 		
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int show_level(const screen_t *screen, const char *propmt, int size_propmt, int level)
@@ -431,7 +460,7 @@ static int show_level(const screen_t *screen, const char *propmt, int size_propm
 	const screen_t *scr=screen;
 	const char *ppt=propmt;
 	if((NULL==scr)||(NULL==ppt)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	y=scr->foreground.top+3;
@@ -441,7 +470,7 @@ static int show_level(const screen_t *screen, const char *propmt, int size_propm
 	mvwprintw(scr->win,y,x,"%s %d",ppt,lvl);
 	close_colors(COLOR_TITLE,A_BOLD);
 		
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int show_time(const screen_t *screen, const char *prompt, int size_propmt, int time)
@@ -452,7 +481,7 @@ static int show_time(const screen_t *screen, const char *prompt, int size_propmt
 	const screen_t *scr=screen;
 	const char *ppt=prompt;
 	if((NULL==scr)||(NULL==ppt)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	y=scr->foreground.top+3;
@@ -462,7 +491,7 @@ static int show_time(const screen_t *screen, const char *prompt, int size_propmt
 	mvwprintw(scr->win,y,x,"%s %d",ppt,tim);
 	close_colors(COLOR_TITLE,A_BOLD);
 		
-	return AG_SUCCESS;	
+	return RET_SUCCESS;	
 }
 
 static int show_help_content(const screen_t *screen)
@@ -470,7 +499,7 @@ static int show_help_content(const screen_t *screen)
 	int i=0,y=0,num=0;
 	const screen_t *scr=screen;
 	if((NULL==scr)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	char help_titile[]="Game instructions";
 	char help_content[][MAX_DATA_LEN_PER_LINE]={
@@ -504,7 +533,7 @@ static int show_help_content(const screen_t *screen)
 	}
 	close_colors(COLOR_TEXT_CONTENT,A_BOLD);
 		
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int show_exit_content(const screen_t *screen)
@@ -512,7 +541,7 @@ static int show_exit_content(const screen_t *screen)
 	int i=0,y=0,num=0;
 	const screen_t *scr=screen;
 	if(NULL==scr){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	char exit_content[][MAX_DATA_LEN_PER_LINE]={
@@ -531,7 +560,7 @@ static int show_exit_content(const screen_t *screen)
 	}
 	close_colors(COLOR_TEXT_CONTENT,A_BOLD);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static void open_colors(color_t type, int attrs)
@@ -601,34 +630,4 @@ static void close_colors(color_t type, int attrs)
 		
 	return;
 }
-
-int show_button(const screen_t *scr,int offset_y,int offset_x,int sel_flag,const char *text,int attrs)
-{
-	if(NULL==scr){
-		return AG_FAILED;
-	}
-	switch(sel_flag){
-		case TRUE:
-			open_colors(COLOR_ICON_SELECT,A_BOLD);
-			break;
-		default:			
-			open_colors(COLOR_ICON_NORMAL,A_BOLD);
-			break;
-	}
-
-	mvwprintw(scr->win,scr->foreground.top+offset_y,scr->foreground.left+offset_x,"%s",text);
-	
-	switch(sel_flag){
-		case TRUE:
-			close_colors(COLOR_ICON_SELECT,A_BOLD);
-			break;
-		default:			
-			close_colors(COLOR_ICON_NORMAL,A_BOLD);
-			break;
-	}		
-	
-	return AG_SUCCESS;
-}
-
-
 

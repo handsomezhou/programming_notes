@@ -11,11 +11,11 @@ extern int input_alphabet_game(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	get_m_evt_code(ag,&ag->m_evt_code);
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int get_m_evt_code(alphabet_game_t *alphabet_game,m_evt_code_t *m_evt_code)
@@ -23,7 +23,7 @@ static int get_m_evt_code(alphabet_game_t *alphabet_game,m_evt_code_t *m_evt_cod
 	alphabet_game_t *ag=alphabet_game;
 	m_evt_code_t *mec=m_evt_code;
 	if((NULL==ag)||(NULL==mec)){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	init_m_evt_code(mec);
@@ -49,6 +49,6 @@ static int get_m_evt_code(alphabet_game_t *alphabet_game,m_evt_code_t *m_evt_cod
 			break;
 	}
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 

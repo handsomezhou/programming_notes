@@ -21,7 +21,7 @@ int handle_alphabet_game(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	switch(ag->status){
@@ -42,7 +42,7 @@ int handle_alphabet_game(alphabet_game_t *alphabet_game)
 		break;
 	}
 	
-	return AG_SUCCESS;	
+	return RET_SUCCESS;	
 }
 
 int produce_random_alphabet_sequence(alphabet_game_t *alphabet_game, int alphabet_sequence_num)
@@ -52,7 +52,7 @@ int produce_random_alphabet_sequence(alphabet_game_t *alphabet_game, int alphabe
 	int i=0,j=0,random=0,rand_num=0;
 	bool is_random_success=FALSE;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	srand((unsigned int)time(NULL));
 
@@ -78,7 +78,7 @@ int produce_random_alphabet_sequence(alphabet_game_t *alphabet_game, int alphabe
 		}
 	}
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 bool judge_cur_sort_foremost_alphabet(alphabet_game_t *alphabet_game, int index)
@@ -110,7 +110,7 @@ int exit_child_status_start(alphabet_game_t * alphabet_game)
 	alphabet_game_t *ag=alphabet_game;
 	int i=0,total_item;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	total_item=get_total_alphabet_num(ag);
@@ -122,7 +122,7 @@ int exit_child_status_start(alphabet_game_t * alphabet_game)
 	set_remain_alphabet_num(ag,get_total_alphabet_num(ag));
 	set_cur_status(ag,MAIN_STATUS);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 void signal_process(int signo)
 {
@@ -150,30 +150,28 @@ static int handle_main_status(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
-	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	//mvwprintw(ag->scr.win,3,10,"I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
-	ctrl_tool_handle(&ag->scr,ag->main_status,&ag->m_evt_code);
+	ctrl_tool_handle(ag,ag->main_status,&ag->m_evt_code);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int handle_child_status_start(alphabet_game_t *alphabet_game)
 {
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
 	if(get_remain_time(ag)<=0){
 		exit_child_status_start(ag);
 		
-		return AG_SUCCESS;
+		return RET_SUCCESS;
 	}
 	
-	if(ctrl_tool_handle(&ag->scr,ag->child_status_start,&ag->m_evt_code)!=CTRL_TOOL_FAILED){
+	if(ctrl_tool_handle(ag,ag->child_status_start,&ag->m_evt_code)!=CTRL_TOOL_FAILED){
 		if(TRUE==is_enter_next_level(ag)){
 			if(NULL!=ag->child_status_start){
 				ctrl_tool_free(ag->child_status_start);
@@ -187,7 +185,7 @@ static int handle_child_status_start(alphabet_game_t *alphabet_game)
 		}	
 	}
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int handle_child_status_help(alphabet_game_t *alphabet_game)
@@ -195,26 +193,26 @@ static int handle_child_status_help(alphabet_game_t *alphabet_game)
 	//printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	alphabet_game_t *ag=alphabet_game;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 
-	ctrl_tool_handle(&ag->scr,ag->child_status_help,&ag->m_evt_code);
+	ctrl_tool_handle(ag,ag->child_status_help,&ag->m_evt_code);
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int handle_child_status_exit(alphabet_game_t *alphabet_game)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
 
 static int handle_child_status_default(alphabet_game_t * alphabet_game)
 {
 	printf("I'm %s() at %d in %s\n",__func__,__LINE__,__FILE__);
 	
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }	
 
 static int produce_random_number(int start_num, int end_num)
@@ -233,7 +231,7 @@ static int signal_process_child_status_start(alphabet_game_t *alphabet_game,int 
 	alphabet_game_t *ag=alphabet_game;
 	int sgn=signo;
 	if(NULL==ag){
-		return AG_FAILED;
+		return RET_FAILED;
 	}
 	
 	switch(sgn){
@@ -253,5 +251,5 @@ static int signal_process_child_status_start(alphabet_game_t *alphabet_game,int 
 			break;
 	}
 
-	return AG_SUCCESS;
+	return RET_SUCCESS;
 }
