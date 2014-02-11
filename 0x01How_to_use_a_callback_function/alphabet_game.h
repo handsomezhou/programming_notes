@@ -13,11 +13,6 @@
 
 #define GAME_NAME		"Alphabet Game"
 
-#define AG_SUCCESS		(0)
-#define AG_FAILED		(-1)
-#define RET_SUCCESS		AG_SUCCESS
-#define RET_FAILED		AG_FAILED
-
 #define DELAY_TIME_MAX	500000//us
 #define DELAY_TIME_MIN	 50000//us
 #define DELAY_TIME		250000//us

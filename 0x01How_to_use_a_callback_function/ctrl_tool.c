@@ -18,7 +18,6 @@ static int ctrl_tool_response_press(p_void_data_t p_void_data, p_void_ctrl_tool_
 static int ctrl_tool_response_release(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
 static int ctrl_tool_response_focus(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
 static int ctrl_tool_response_exit(p_void_data_t p_void_data, p_void_ctrl_tool_t p_void_ctrl_tool, const m_evt_code_t *p_m_evt_code);
-static coordinate_t *get_coordinate(coordinate_t *coordinate,const m_evt_mouse_t *mevnet);
 static bool point_in_rect(const coordinate_t *left_vertex,const rect_t *rect,const coordinate_t *coordinate);
 
 
@@ -470,19 +469,6 @@ static int ctrl_tool_response_exit(p_void_data_t p_void_data, p_void_ctrl_tool_t
 	cur_item=ctrl_tool->cur_item;
 	
 	return cur_item;
-}
-
-static coordinate_t *get_coordinate(coordinate_t *coordinate,const m_evt_mouse_t *mevnet)
-{
-	coordinate_t *ce=coordinate;
-	const m_evt_mouse_t *evt=mevnet;
-	if(NULL==ce||NULL==evt){
-		return ce;
-	}
-	ce->y=(T_S16)evt->y;
-	ce->x=(T_S16)evt->x;
-	
-	return ce;
 }
 
 static bool point_in_rect(const coordinate_t *left_vertex,const rect_t *rect,const coordinate_t *coordinate)

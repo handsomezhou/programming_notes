@@ -4,7 +4,10 @@
 #ifndef DATA_TYPE_H
 #define DATA_TYPE_H
 #include <stdio.h>	//NULL
+#include "message_event.h"
 
+#define RET_SUCCESS		(0)
+#define RET_FAILED		(-1)
 #define TEXT_MAX_LEN	255//256-1
 
 typedef signed short T_S16;
@@ -21,8 +24,6 @@ typedef int T_BOOL;
 #ifndef bool
 #define bool int
 #endif
-
-
 
 typedef struct Coordinate{
 	int16_t y;
@@ -47,6 +48,8 @@ typedef struct Button{
 }T_BUTTON,*T_pBUTTON;
 typedef T_BUTTON button_t;
 
-coordinate_t *cpy_coordinate(coordinate_t *dst, const coordinate_t *src);
-rect_t *cpy_rect(rect_t *dst, const rect_t *src);
+extern coordinate_t *get_coordinate(coordinate_t *coordinate,const m_evt_mouse_t *mevent);
+extern coordinate_t *get_coordinate_from_m_evt_code(coordinate_t *coordinate,const m_evt_code_t *m_evt_code);
+extern coordinate_t *cpy_coordinate(coordinate_t *dst, const coordinate_t *src);
+extern rect_t *cpy_rect(rect_t *dst, const rect_t *src);
 #endif		/*DATA_TYPE_H*/

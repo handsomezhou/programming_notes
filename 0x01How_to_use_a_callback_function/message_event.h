@@ -70,4 +70,7 @@ typedef struct message_event_code{
 	m_evt_param_t	m_evt_param;
 }m_evt_code_t;	//T_M_EVENT_CODE;
 
+extern m_evt_type_t get_m_evt_type(const m_evt_code_t *m_evt_code);
+extern m_evt_key_t get_m_evt_key(const m_evt_code_t *m_evt_code);
+extern m_evt_mouse_t *get_m_evt_mouse(m_evt_code_t *m_evt_code);
 #endif	/*MESSAGE_EVENT_H*/
