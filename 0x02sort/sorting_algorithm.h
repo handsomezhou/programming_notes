@@ -11,6 +11,8 @@
 ¼ÆÊýÅÅÐò;*/
 
 extern void *bubble_sort(void *sort_data, int sort_data_len);
+extern void *quick_sort(void *sort_data, int low, int high);
+extern int show_data(const int *data, int data_len);
 
 #endif	/*SORTING_ALGORITHM_H*/
 
