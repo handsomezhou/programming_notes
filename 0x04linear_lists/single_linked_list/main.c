@@ -8,25 +8,52 @@
 int main(int argc, char *argv[])
 {
 	int i=0;
+	elem_t elem;
 	int node_number=10;
-	node_t *plist=NULL;
-	node_t *pnode=NULL;
-	data_t *pdata=malloc_data();
-	int number=1;
-	
-	
-	plist=list_new_head_node();
-
+	pf_node_travel node_travel=show_node;
+	pf_node_compare node_compare=compare_node;
+	linklist_t linklist=init_list();
 	for(i=0; i<node_number; i++){
-		set_number_to_data(pdata,++number);
-		pnode=produce_node(pdata);
-		list_node_append(plist,pnode);
+		if(LIST_SUCCEED==list_node_insert(linklist,i+1,i+1)){
+			printf("i=%d,success\n",i+1);
+		}else{
+			printf("i=%d,failed\n",i+1);
+		}
 	}
 
-	list_travel(plist,&show_node);
+	list_travel(linklist,node_travel);
+
+	elem=5;
+	i=locate_elem(linklist,elem,node_compare);
+	printf("elem=%d,index=%d\n",elem,i);
+
+	elem=11;
+	list_node_insert_tail(linklist,elem);
+	elem=12;
+	list_node_insert_tail(linklist,elem);
+
+	elem=13;
+	list_node_delete_tail(linklist,&elem);
+	printf("delete tail elem[%d]\n",elem);
+	list_node_delete_tail(linklist,&elem);
+	printf("delete tail elem[%d]\n",elem);
+	list_node_delete_tail(linklist,&elem);
+	printf("delete tail elem[%d]\n",elem);
+	list_node_delete_tail(linklist,&elem);
+	printf("delete tail elem[%d]\n",elem);
 	
-	list_delete(plist);
-	plist=NULL;
+	printf("list is empty =%d\n",list_is_empty(linklist));
+	
+	node_number=list_length(linklist);
+	for(i=0; i<node_number; i++){
+		get_elem(linklist,1,&elem);
+		printf("get elem[%d] ===",elem);
+		list_node_delete(linklist,1,&elem);
+		printf("delete elem[%d]\n",elem);
+	}
+
+	free_list(linklist);
+	linklist=NULL;
 	
 	return 0;
 }

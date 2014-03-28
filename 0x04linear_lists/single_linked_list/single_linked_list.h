@@ -5,23 +5,41 @@
 #ifndef SINGLE_LINKED_LIST_H
 #define SINGLE_LINKED_LIST_H
 
-struct data;
-typedef struct data data_t,*pdata_t;
+//Reference:	http://zh.wikipedia.org/zh-cn/%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8
 
-struct node;
-typedef struct node node_t,*pnode_t;
+typedef int bool_t;
+#define TRUE	1
+#define FALSE	0
 
-typedef void node_proc_fun_t(void*);
-node_t *list_new_head_node(void);
-node_t *produce_node(data_t *data);
-node_t *list_node_append(node_t *list,node_t *node);
-void list_travel(const node_t *list, node_proc_fun_t *proc);
-void show_node(void *data);
-int list_delete(node_t *list);
+#define LIST_SUCCEED	0
+#define LIST_FAILED		(-1)
 
-data_t *malloc_data(void);
-void free_data(data_t *data);
-int set_number_to_data(data_t *data, int number);
-int get_number_from_data(const data_t *data);
+typedef int elem_t;
+typedef struct node{
+	elem_t elem;
+	struct node *next;
+}node_t,*linklist_t;
+
+typedef int (*pf_node_compare)(const void *, const void *);
+typedef int (*pf_node_travel)(void *);
+
+linklist_t init_list(void);
+void free_list(linklist_t linklist);
+void clear_list(linklist_t linklist);
+bool_t list_is_empty(linklist_t linklist);
+int list_length(linklist_t linklist);
+int get_elem(linklist_t linklist, int i, elem_t *elem);
+int locate_elem(linklist_t linklist, elem_t elem, pf_node_compare node_compare);
+int prior_elem(linklist_t linklist, elem_t cur_elem, elem_t *prev_elem);
+int next_elem(linklist_t linklist, elem_t cur_elem, elem_t *next_elem);
+int list_node_insert(linklist_t linklist, int i, elem_t elem);
+int list_node_delete(linklist_t linklist, int i, elem_t *elem);
+int list_node_insert_tail(linklist_t linklist, elem_t elem);
+int list_node_delete_tail(linklist_t linklist, elem_t *elem);
+int list_travel(linklist_t linklist,pf_node_travel node_travel);
+
+
+int show_node(void *data);
+int compare_node(const void *elem1, const void *elem2);
 
 #endif	/*SINGLE_LINKED_LIST_H*/

@@ -6,136 +6,254 @@
 #include <assert.h>
 #include "single_linked_list.h"
 
-typedef struct data{
-	int number;
-};
-	
-typedef struct node{
-	data_t data;
-	struct node *next;
-};
-
-
-node_t *list_new_head_node(void)
+linklist_t init_list(void)
 {
-	node_t *list=NULL;
-	list=(node_t *)malloc(sizeof(node_t));
-	if(NULL==list){
-		printf("list head node malloc failed:FILE=[%s],LINE=[%d],FUNCTION=[%s()]\n",__FILE__,__LINE__,__FUNCTION__);
-		return list;
-	}
-
-	list->data.number=0;
-	list->next=NULL;
-	
-	return list;
-}
-
-node_t *list_node_append(node_t *list,node_t *node)
-{
-	node_t *plist=list;
-	node_t *cur_node=NULL;
-	assert(NULL!=plist);
-	if(NULL==node){
-		return plist;
-	}
-	cur_node=plist;
-	while(NULL!=cur_node){
-		cur_node=cur_node->next;
-		if(NULL==cur_node){
-			cur_node=node;
-			break;
-		}
-	}
-
-	return plist;
-}
-
-node_t *produce_node(data_t *data)
-{
-	data_t *pdata=data;
-	assert(NULL!=pdata);
-	node_t *pnode=(node_t *)malloc(sizeof(node_t));
-	if(NULL==pnode){
-		printf("node malloc failed:FILE=[%s],LINE=[%d],FUNCTION=[%s()]\n",__FILE__,__LINE__,__FUNCTION__);		
+	linklist_t linklist=(node_t *)malloc(sizeof(node_t));
+	if(NULL==linklist){
+		printf("malloc failed:FILE=[%s],LINE=[%d],FUNCTION=[%s()]\n",__FILE__,__LINE__,__FUNCTION__);				
 		return NULL;
 	}
 
-	pnode->data.number=get_number_from_data(pdata);
-	pnode->next=NULL;
+	linklist->elem=0;
+	linklist->next=NULL;
 	
-	return pnode;
+	return linklist;
 }
 
-void list_travel(const node_t *list, node_proc_fun_t *proc)
+void free_list(linklist_t linklist)
 {
-	assert(NULL!=list);
-	const node_t *plist=list;
-	node_t *cur_node=plist->next;
-	while(NULL!=cur_node){
-		proc(&cur_node->data);
-		cur_node=cur_node->next;
-	}
-
-	return ;
-}
-
-int list_delete(node_t *list)
-{
-	
-	return 0;
-}
-
-void show_node(void *data)
-{
-	data_t *pdata=(data_t *)data;
-	printf("...\n");
-	if(NULL==pdata){
+	if(NULL==linklist){
 		return ;
 	}
+	linklist_t p=linklist;
+	linklist_t q=NULL;
+	while(NULL!=p){
+		q=p->next;
+		free(p);
+		p=q;
+	}
 	
-	//printf("data:(%d)\n",get_number_from_data(pdata));
-	printf("...\n");
-
-	return ;
+	return;
 }
 
-data_t *malloc_data(void)
+void clear_list(linklist_t linklist)
 {
-	data_t *pdata=(data_t *)malloc(sizeof(data_t));
-	if(NULL==pdata){
-
-		return NULL;
+	if(NULL==linklist){
+		return;
 	}
-
-	return pdata;
+	linklist_t p=linklist->next;
+	linklist_t q=NULL;
+	while(NULL!=p){
+		q=p->next;
+		free(p);
+		p=q;
+	}
+	linklist->next=NULL;
+	
+	return;
 }
 
-void free_data(data_t *data)
+bool_t list_is_empty(linklist_t linklist)
 {
-	if(NULL!=data){
-		free(data);
-		data=NULL;
-	}
+	return (NULL==linklist->next)?(TRUE):(FALSE);
 }
 
-int set_number_to_data(data_t *data, int number)
+int list_length(linklist_t linklist)
 {
-	data_t *pdata=data;
-	if(NULL==pdata){
-		return -1;
+	int i=0;
+	if(NULL==linklist){
+		return 0;
+	}
+	linklist_t p=linklist->next;
+	while(NULL!=p){
+		i++;
+		p=p->next;
+	}
+	
+	return i;
+}
+
+int get_elem(linklist_t linklist, int i, elem_t *elem)
+{
+	assert(NULL!=linklist);
+	int j=0;
+	node_t *p=linklist->next;
+	
+	while((NULL!=p)&&(j<i-1)){/*find the node which index is i-1.  ps:the head node's index is 0*/
+		p=p->next;
+		j++;
 	}
 
-	pdata->number=number;
+	if((NULL==p)||(j>i-1)){/*greater than the length of link list or i <1*/
+		return LIST_FAILED;
+	}
+
+	*elem=p->elem;	
+
+	return LIST_SUCCEED;
+}
+
+int locate_elem(linklist_t linklist, elem_t elem, pf_node_compare node_compare)
+{
+	if(NULL==linklist){
+		return 0;
+	}
+	int i=0; 	
+	linklist_t p=linklist->next;
+	while(NULL!=p){
+		i++;
+		if(node_compare(&p->elem,&elem)==0){
+			return i;
+		}
+		p=p->next;
+	}
+	
+	return 0;
+}
+
+int prior_elem(linklist_t linklist, elem_t cur_elem, elem_t *prev_elem)	
+{
 
 	return 0;
 }
-int get_number_from_data(const data_t *data)
+
+int next_elem(linklist_t linklist, elem_t cur_elem, elem_t *next_elem)
 {
-	if(NULL==data){
+	
+	return 0;
+}
+
+int list_node_insert(linklist_t linklist, int i, elem_t elem)
+{
+
+	assert(NULL!=linklist);
+	int j=0;
+	node_t *p=linklist;
+	node_t *new_node=NULL;
+	while((NULL!=p)&&(j<i-1)){/*find the node which index is i-1.  ps:the head node's index is 0*/
+		p=p->next;
+		j++;
+	}
+
+	if((NULL==p)||(j>i-1)){/*greater than the length of link list or i <1*/
+		return LIST_FAILED;
+	}
+
+	new_node=(node_t *)malloc(sizeof(node_t));
+	if(NULL==new_node){
+		printf("malloc failed:FILE=[%s],LINE=[%d],FUNCTION=[%s()]\n",__FILE__,__LINE__,__FUNCTION__);				
+		return LIST_FAILED;
+	}
+	new_node->elem=elem;
+	new_node->next=p->next;
+	p->next=new_node;
+	
+	return LIST_SUCCEED;
+}
+
+int list_node_delete(linklist_t linklist, int i, elem_t *elem)
+{
+	assert(NULL!=linklist);
+	int j=0;
+	node_t *p=linklist;
+	node_t *q=NULL;
+	
+	while((NULL!=p->next)&&(j<i-1)){/*find the node which index is i-1.  ps:the head node's index is 0*/
+		p=p->next;
+		j++;
+	}
+
+	if((NULL==p->next)||(j>i-1)){/*greater than the length of link list or i <1*/
+		return LIST_FAILED;
+	}
+
+	q=p->next;
+	p->next=q->next;
+	*elem=q->elem;
+	free(q);
+	
+	return LIST_SUCCEED;
+}
+
+int list_node_insert_tail(linklist_t linklist, elem_t elem)
+{
+	if(NULL==linklist){
+		return LIST_FAILED;
+	}
+	
+	linklist_t p=linklist;
+	node_t *new_node=NULL;
+	while(NULL!=p->next){
+		p=p->next;
+	}
+
+	new_node=(node_t *)malloc(sizeof(node_t));
+	if(NULL==new_node){
+		printf("malloc failed:FILE=[%s],LINE=[%d],FUNCTION=[%s()]\n",__FILE__,__LINE__,__FUNCTION__);				
+		return LIST_FAILED;
+	}
+	new_node->elem=elem;
+	new_node->next=NULL;
+
+	p->next=new_node;
+
+	return LIST_SUCCEED;
+}
+
+int list_node_delete_tail(linklist_t linklist, elem_t *elem)
+{
+	if(NULL==linklist){
+		return LIST_FAILED;
+	}
+	linklist_t p=linklist;
+	linklist_t q=NULL;
+	while(NULL!=p->next){
+		q=p;
+		p=p->next;
+	}
+
+	if(NULL==q){
+		return LIST_FAILED;
+	}
+	
+	q->next=p->next;
+	*elem=p->elem;
+	free(p);
+	
+	return LIST_SUCCEED;
+}
+
+int list_travel(linklist_t linklist,pf_node_travel node_travel)
+{
+	assert(NULL!=linklist);
+	linklist_t p=linklist->next;
+	while(NULL!=p){
+		node_travel((void *)&p->elem);
+		p=p->next;
+	}
+	
+	return 0;
+}
+
+
+int show_node(void *data)
+{
+	elem_t *elem=(elem_t *)data;
+	printf("[%d]\n",*elem);
+
+	return 0;
+}
+
+int compare_node(const void *elem1, const void *elem2)
+{
+	const elem_t *e1=(elem_t *)elem1;
+	const elem_t *e2=(elem_t *)elem2;
+	if(*e1>*e2){
+		return 1;
+	}else if(*e1<*e2){
 		return -1;
 	}
 
-	return data->number;
+	return 0;
 }
 
