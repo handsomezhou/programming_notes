@@ -60,6 +60,37 @@ void *quick_sort(void *sort_data, int low, int high)
 	return psd;
 }
 
+
+void *select_sort(void *sort_data, int sort_data_len)
+{
+	int *psd=sort_data;
+	int sd_len=sort_data_len;
+	int i=0,j=0;
+	int tmp=0;
+	int index=0;
+
+	for(i=0; i<sd_len-1; i++){
+		index=i;
+
+		for(j=i+1; j<sd_len; j++){
+			if(*(psd+index)>*(psd+j)){
+				index=j;
+			}
+		}
+
+		if(index!=i){
+			tmp=*(psd+index);
+			*(psd+index)=*(psd+i);
+			*(psd+i)=tmp;
+		}
+
+		show_data(psd,sd_len);	//just for debug
+	}
+
+	return psd;
+}
+	
+
 int show_data(const int *data, int data_len)
 {
 	int i=0;

@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 	bubble_sort((void *)data1,data_len1);
 	printf("\n\n\n");
 
+
 	int data2[]={1,15,0,2,14,9,3,8,16,4,7,5,6,13,11,12};
 	int data_len2=sizeof(data2)/sizeof(data2[0]);
 	dt_len=data_len2;
@@ -22,6 +23,16 @@ int main(int argc, char *argv[])
 	show_data(data2,dt_len);
 	printf("quick_sort\n");
 	quick_sort(data2,0,data_len2-1);
+	printf("\n\n\n");
+
+
+	int data3[]={1,15,0,2,14,9,3,8,16,4,7,5,6,13,11,12};
+	int data_len3=sizeof(data3)/sizeof(data3[0]);
+	show_data(data3,data_len3);
+	printf("select_sort\n");
+	select_sort(data3,data_len3);
+
+	
 	
 	return 0;
 }
