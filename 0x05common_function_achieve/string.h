@@ -11,7 +11,7 @@
  char *my_strcpy(char *dest, const char *src); 
  char *my_strncpy(char *dest, const char *src, int n);
 
- int my_strcmp(const char *src, const char *dst);
- int my_strncmp(const char *src, const char *dst, int n);
+ int my_strcmp(const char *s1, const char *s2);
+ int my_strncmp(const char *s1, const char *s2, int n);
 
 #endif	/*STRING_H*/
