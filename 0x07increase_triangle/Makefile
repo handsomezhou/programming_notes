@@ -1,7 +1,7 @@
 CROSS_COMPILE:=
 TARGET=$(notdir $(CURDIR))
 C_FLAGS+=-Wall -g
-LD_FLAGS+=-lncurses -lpthread
+LD_FLAGS+=-lncurses -lpthread -lm
 SOURCES=$(wildcard *.c)
 HEADERS=$(wildcard *.h)
 OBJFILES=$(SOURCES:%.c=%.o)

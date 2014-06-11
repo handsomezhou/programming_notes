@@ -3,6 +3,7 @@
   */
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "increase_triangle.h"
 
 typedef struct elem{
@@ -25,17 +26,31 @@ struct increase_triangle{
 
 static layer_index_t *layer_index_init(layer_index_t **p_layer_index, int layers);
 static void layer_index_free(layer_index_t *layer_index);
+static void layer_index_set(layer_index_t *layer_index, int base_value, int multiple);
+static int calc_elem_value(int which_layer, int base_value, int multiple);
 static layer_index_t *malloc_layer_index();
 static void free_layer_index(layer_index_t *layer_index);
 static void show_layer_index(layer_index_t *layer_index);
-static void set_elem_num(layer_index_t *layer_index, int elem_num);
-static int get_elem_num(const layer_index_t *layer_index);
+static int get_layer_value_sum_by_curlayer(layer_index_t *layer_index);
+static int get_layer_value_sum_until_curplayer(layer_index_t *first_layer_index, int cur_player);
+
 typedef void *(*pf_data_elem_malloc)();
 typedef void (*pf_data_elem_free)(void *);
+typedef void (*pf_data_elem_set)(void *,int);
+typedef int (*pf_data_elem_get)(void *);
+typedef void (*pf_data_elem_show)(void *);
+
 static void *int_elem_malloc();
 static void int_elem_free(void *elem);
+static void int_elem_set(void *elem, int value);
+static int int_elem_get(void *elem);
+static void int_elem_show(void *elem);
+
 static elem_t *elem_malloc(pf_data_elem_malloc f_data_elem_malloc);
 static void elem_free(elem_t *elem,pf_data_elem_free f_data_elem_free);
+static void elem_set(elem_t *elem, void *value, pf_data_elem_set f_data_elem_set);
+static void elem_get(elem_t *elem,void *value, pf_data_elem_get f_data_elem_get);
+static void elem_show(elem_t *elem, pf_data_elem_show f_data_elem_show);
 
 
 static void *int_elem_malloc()
@@ -57,6 +72,31 @@ static void int_elem_free(void *elem)
 	//p_elem=NULL;
 }
 
+static void int_elem_set(void *elem, int value)
+{
+	int *p_elem=(int *)elem;
+	if((NULL!=p_elem)){
+		*p_elem=value;
+	}
+}
+
+static int int_elem_get(void *elem)
+{
+	int *p_elem=(int *)elem;
+	if(NULL!=p_elem){
+		return (*p_elem);
+	}
+
+	return ELEM_VALUE_NULL_VALUE;
+}
+
+static void int_elem_show(void *elem)
+{
+	int *p_elem=(int *)elem;
+	if(NULL!=p_elem){
+		printf("%-4d ",*p_elem);
+	}
+}
 static elem_t *elem_malloc(pf_data_elem_malloc f_data_elem_malloc)
 {
 	static int i=0;
@@ -98,6 +138,48 @@ static void elem_free(elem_t *elem,pf_data_elem_free f_data_elem_free)
 //	p_elem=NULL;
 }
 
+static void elem_set(elem_t *elem, void *value, pf_data_elem_set f_data_elem_set)
+{
+	elem_t *p_elem=elem;
+	void *p_value=value;
+	if((NULL==p_elem)||(NULL==p_value)){
+		return ;
+	}
+
+	if(NULL!=f_data_elem_set){
+		f_data_elem_set(p_elem->elem,*(int *)p_value);
+	}	
+
+	return;
+}
+
+static void elem_get(elem_t *elem,void *value, pf_data_elem_get f_data_elem_get)
+{
+	elem_t *p_elem=elem;
+	void *p_value=value;
+	if((NULL==p_elem)||(NULL==p_value)){
+		return ;
+	}
+
+	if(NULL!=f_data_elem_get){
+		*(int *)p_value=f_data_elem_get(p_elem->elem);
+	}
+	
+}
+static void elem_show(elem_t *elem, pf_data_elem_show f_data_elem_show)
+{
+	elem_t *p_elem=elem;
+	if(NULL==p_elem){
+		return;
+	}
+
+	if(NULL!=f_data_elem_show){
+		f_data_elem_show(p_elem->elem);
+	}
+
+	return;
+
+}
 static layer_index_t *layer_index_init(layer_index_t **p_layer_index, int layers)
 {
 	int i=0;
@@ -118,6 +200,7 @@ static layer_index_t *layer_index_init(layer_index_t **p_layer_index, int layers
 	for(i=1; i<layers; i++){
 		next_layer_index=malloc_layer_index();
 		if(NULL==next_layer_index){
+#if 0
 			cur_layer_index=first_layer_index;
 			while(NULL!=cur_layer_index){
 				next_layer_index=cur_layer_index->next_layer;
@@ -125,6 +208,8 @@ static layer_index_t *layer_index_init(layer_index_t **p_layer_index, int layers
 				free_layer_index(cur_layer_index);
 				cur_layer_index=next_layer_index;
 			}
+#endif			
+			layer_index_free(first_layer_index);
 			return NULL;
 		}
 		cur_layer_index->next_layer=next_layer_index;
@@ -158,7 +243,6 @@ static layer_index_t *layer_index_init(layer_index_t **p_layer_index, int layers
 			cur_elem->next_elem=NULL;
 		}
 		cur_layer_index->elem=first_elem;
-		printf("j\n");
 	}
 	
 	*p_layer_index=first_layer_index;
@@ -185,12 +269,47 @@ static void layer_index_free(layer_index_t *layer_index)
 			elem_free(cur_elem,int_elem_free);
 			cur_elem=next_elem;
 		}
-		printf("k\n");
 		free_layer_index(cur_layer_index);
 		cur_layer_index=next_layer_index;
 	}
+
+	return;
 	
 }
+
+static void layer_index_set(layer_index_t *layer_index, int base_value, int multiple)
+{
+	layer_index_t *p_layer_index=layer_index;
+	elem_t *p_elem=NULL;
+	int elem_value=0;
+	int which_layer=0;
+	if(NULL==p_layer_index){
+		return;
+	}
+
+	while(NULL!=p_layer_index){
+		++which_layer;
+		elem_value=calc_elem_value(which_layer,base_value,multiple);
+		p_elem=p_layer_index->elem;
+		while(NULL!=p_elem){
+			elem_set(p_elem,&elem_value,int_elem_set);
+			p_elem=p_elem->next_elem;
+		}
+		p_layer_index=p_layer_index->next_layer;
+	}
+	
+	return;
+}
+
+static int calc_elem_value(int which_layer, int base_value, int multiple)
+{
+	//base_value*(multiple^(cur_layer-1))
+	int elem_value=-1;
+	elem_value=base_value*(pow(multiple,(which_layer-1)));
+	
+	return elem_value;
+}
+
 static layer_index_t *malloc_layer_index()
 {
 	layer_index_t *p_layer_index=NULL;
@@ -216,36 +335,66 @@ static void free_layer_index(layer_index_t *layer_index)
 static void show_layer_index(layer_index_t *layer_index)
 {
 	layer_index_t *p_layer_index=layer_index;
+	elem_t *p_elem=NULL;
 	int i=0;
 	if(NULL==p_layer_index){
 		return;
 	}
 
 	while(NULL!=p_layer_index){
-		printf("%s() i=[%d]\n",__func__,++i);
+		p_elem=p_layer_index->elem;
+		printf("[layer=%-2d]",++i);
+		while(NULL!=p_elem){
+			elem_show(p_elem,int_elem_show);
+			p_elem=p_elem->next_elem;
+		}
+		printf("\n");
+		
 		p_layer_index=p_layer_index->next_layer;
 	}
 }
 
-static void set_elem_num(layer_index_t *layer_index, int elem_num)
+static int get_layer_value_sum_by_curlayer(layer_index_t *layer_index)
 {
-	int en=((elem_num<0)?(0):(elem_num));
-	
-	if(NULL!=layer_index){
-		layer_index->elem_num=en;
+	layer_index_t *p_layer_index=layer_index;
+	elem_t *p_elem=NULL;
+	int layer_value_sum=0;
+	int value=0;
+	if(NULL==p_layer_index){
+		return ELEM_VALUE_SUM_NULL_VALUE;
 	}
 
-	return;
-}
-static int get_elem_num(const layer_index_t *layer_index)
-{
-	int en=0;
-	if(NULL!=layer_index){
-		en=layer_index->elem_num;
+	p_elem=p_layer_index->elem;
+	while(NULL!=p_elem){
+		elem_get(p_elem,&value,int_elem_get);
+		layer_value_sum +=value;
+		p_elem=p_elem->next_elem;
 	}
 
-	return en;
+	return layer_value_sum;
 }
+
+static int get_layer_value_sum_until_curplayer(layer_index_t *first_layer_index, int cur_player)
+{
+	layer_index_t *p_layer_index=first_layer_index;
+	int count_layer=0;
+	int layer_value_sum=0;
+	if(NULL==p_layer_index){
+		return ELEM_VALUE_SUM_NULL_VALUE;
+	}
+
+	while(NULL!=p_layer_index){
+		count_layer++;
+		if(count_layer>cur_player){
+			break;
+		}
+		layer_value_sum += get_layer_value_sum_by_curlayer(p_layer_index);
+		p_layer_index=p_layer_index->next_layer;
+	}
+
+	return layer_value_sum;
+}
+
 
 increase_triangle_t *increase_triangle_init(int layers, int base_value, int multiple)
 {
@@ -279,6 +428,7 @@ increase_triangle_t *increase_triangle_init(int layers, int base_value, int mult
 		set_layers(p_increase_triangle,lyrs);
 		set_base_value(p_increase_triangle,bs_vl);
 		set_multiple(p_increase_triangle,mltpl);
+		p_increase_triangle->layer_index=NULL;
 	
 		layer_index_ret=layer_index_init(&p_increase_triangle->layer_index,lyrs);
 		if(NULL==layer_index_ret){
@@ -287,6 +437,9 @@ increase_triangle_t *increase_triangle_init(int layers, int base_value, int mult
 			//return NULL;
 			break;
 		}
+
+		layer_index_set(p_increase_triangle->layer_index,p_increase_triangle->base_value,p_increase_triangle->multiple);
+		
 	}while(0);
 	
 	return p_increase_triangle;
@@ -314,8 +467,26 @@ void increase_triangle_show(increase_triangle_t *increase_triangle)
 	if(NULL==p_increase_triangle){
 		return;
 	}
-	
+	int i=0;
+	int layer_value_sum=0;
+	int layers_value_sum=0;
+	int all_value_sum=0;
+	printf("\n");
+	printf("layers=[%d],base_value=[%d],multiple=[%d];\n",get_layers(p_increase_triangle),get_base_value(p_increase_triangle),get_multiple(p_increase_triangle));
 	show_layer_index(p_increase_triangle->layer_index);
+	printf("\n");
+	
+	for(i=0; i<p_increase_triangle->layers; i++){
+		layer_value_sum=get_layer_value_sum(p_increase_triangle,i+1);		
+		layers_value_sum=get_increase_triangle_layers_value_sum(p_increase_triangle,i+1);
+		printf("layer=%-2d,layer_sum=[%-5d] 2*layer_sum=[%-5d];layers_sum=[%-5d],2*layer_sum-layers_num=[%-5d]\n",i+1,layer_value_sum,2*layer_value_sum,layers_value_sum,2*layer_value_sum-layers_value_sum);
+			
+	}
+	printf("\n");
+
+	all_value_sum=get_increase_triangle_all_value_sum(p_increase_triangle);
+	printf("all layers sum=[%-5d]\n", all_value_sum);
+	printf("\n");
 	
 	return;
 }
@@ -377,3 +548,65 @@ int get_multiple(increase_triangle_t *increase_triangle)
 	return multiple;
 	
 }
+
+int get_increase_triangle_all_value_sum(increase_triangle_t *increase_triangle)
+{
+	increase_triangle_t *p_increase_triangle=increase_triangle;
+	layer_index_t *p_layer_index=NULL;
+	int all_value_sum=0;
+	if(NULL==p_increase_triangle){
+		return ELEM_VALUE_SUM_NULL_VALUE;
+	}
+
+	p_layer_index=p_increase_triangle->layer_index;
+	while(NULL!=p_layer_index){
+		all_value_sum+=get_layer_value_sum_by_curlayer(p_layer_index);
+		p_layer_index=p_layer_index->next_layer;
+	}
+	
+	return all_value_sum;
+}
+
+int get_increase_triangle_layers_value_sum(increase_triangle_t * increase_triangle, int layers_num)
+{
+	increase_triangle_t *p_increase_triangle=increase_triangle;
+	int layers_value_sum=0;
+	if(NULL==p_increase_triangle){
+		return ELEM_VALUE_SUM_NULL_VALUE;
+	}
+	
+	layers_value_sum=get_layer_value_sum_until_curplayer(p_increase_triangle->layer_index,layers_num);
+		
+	return layers_value_sum;
+}
+
+int get_layer_value_sum(increase_triangle_t *increase_triangle, int which_layer)
+{
+	increase_triangle_t *p_increase_triangle=increase_triangle;
+	layer_index_t *p_layer_index=NULL;
+	elem_t *p_elem=NULL;
+	int count_layer=0;
+	int layer_value_sum=0;
+	if(NULL==p_increase_triangle){
+		return ELEM_VALUE_SUM_NULL_VALUE;
+	}
+		
+	if(which_layer<=0 || which_layer>p_increase_triangle->layers){
+		return ELEM_VALUE_SUM_NULL_VALUE;
+	}
+
+	p_layer_index=p_increase_triangle->layer_index;
+
+	while(NULL!=p_layer_index){
+		count_layer++;
+		if(count_layer==which_layer){
+			p_elem=p_layer_index->elem;
+			layer_value_sum += get_layer_value_sum_by_curlayer(p_layer_index);
+			break;
+		}
+		p_layer_index=p_layer_index->next_layer;
+	}
+	
+	return layer_value_sum;
+}
+
